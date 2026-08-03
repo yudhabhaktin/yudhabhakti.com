@@ -1,5 +1,7 @@
 # yudhabhakti.com
 
+**Live at https://yudhabhakti.com** — deployed automatically from `main`.
+
 Personal site and blog. Astro 5, static output, no client-side framework. Deploys to
 Cloudflare Workers static assets.
 
@@ -118,10 +120,11 @@ pnpm wrangler login     # one time, OAuth — do not use the token in `env`
 pnpm deploy             # builds, then deploys
 ```
 
-### One-time account setup
+### One-time account setup — done, kept for reference
 
 A brand-new Cloudflare account cannot deploy a Worker until two things exist. Both are
-dashboard-only — the API refuses them.
+dashboard-only — the API refuses them. Both are now in place: the workers.dev subdomain is
+`yudha-bhakti-n`, and the `yudhabhakti.com` zone is active.
 
 **1. A workers.dev subdomain.** Without it wrangler has nowhere to publish and fails in CI
 with `You need to register a workers.dev subdomain`, because it cannot prompt
@@ -159,6 +162,28 @@ Once the zone is active, replace workers.dev publishing with a route in `wrangle
 
 `custom_domain: true` makes Cloudflare create the DNS record and issue the certificate on
 deploy. Do not add this before the zone is active — the deploy will fail.
+
+This is already applied in `wrangler.jsonc`.
+
+### If the site looks down from your machine but not elsewhere
+
+A domain that has just been delegated is often cached as non-existent by your local resolver
+or router for a while. The symptom is `Couldn't connect to server` locally while the site is
+fine from everywhere else. Confirm by bypassing DNS:
+
+```bash
+curl -sI --resolve yudhabhakti.com:443:172.67.164.173 https://yudhabhakti.com/
+```
+
+If that returns 200, the site is up and only your resolver is stale. On macOS:
+`sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`.
+
+### A note on robots.txt
+
+Cloudflare prepends a managed Content Signals block that disallows `GPTBot` and
+`meta-externalagent`. `public/robots.txt` is still served underneath it, `Sitemap:` included.
+If you would rather AI crawlers were allowed, that toggle is in the zone settings, not in
+this repo.
 
 ### Continuous deployment via GitHub Actions
 
