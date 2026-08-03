@@ -35,3 +35,6 @@ Thumbs.db
 npm-debug.log*
 pnpm-debug.log*
 yarn-error.log*
+
+# Private working notes — never publish
+NOTES.private.md
