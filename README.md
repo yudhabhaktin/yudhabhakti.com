@@ -144,6 +144,22 @@ must be added to the repository:
 Create a **fresh, scoped** token for CI rather than reusing an existing one. If it is ever
 exposed in a log, you want to revoke it without breaking anything else.
 
+**The token must come from the "Edit Cloudflare Workers" template.** An R2 token, a DNS
+token, or a custom token without `Workers Scripts:Edit` will pass `/user/tokens/verify` — it
+is a real, active token — and then fail the deploy with `Authentication error [code: 10000]`.
+That error does not say "wrong permissions," so it is easy to misread as a bad secret.
+
+Check a token before setting it:
+
+```bash
+CLOUDFLARE_API_TOKEN=xxxx CLOUDFLARE_ACCOUNT_ID=yyyy node scripts/check-cf-token.mjs
+```
+
+It reports whether the token is valid, which accounts it can see, and whether it can actually
+reach Workers on the target account — distinguishing "missing permission" from "scoped to a
+different account," which produce the identical error from wrangler. It never prints the
+token.
+
 Then:
 
 ```bash
