@@ -248,8 +248,9 @@ Already handled:
 - Static pre-rendered HTML — crawlers get full content with no JS execution
 - Unique `<title>` and meta description per page, one `<h1>` per page
 - Canonical URLs, Open Graph, Twitter cards
-- JSON-LD: `Person` sitewide, `BlogPosting` on posts
-- `sitemap-index.xml`, `robots.txt`
+- JSON-LD: one `Person` node referenced by `@id` from every page, `BlogPosting` +
+  `BreadcrumbList` on posts, `ProfilePage` on `/about`
+- `sitemap-index.xml` with `lastmod` on every post, `robots.txt`
 - Social preview image at `public/og.png`, default for every page
 - Semantic landmarks, skip link, `prefers-reduced-motion`, light/dark with no FOUC
 
@@ -274,21 +275,50 @@ two people.
 
 `SITE.title` and `SITE.shortName` in `src/consts.ts` control this. Do not diverge them.
 
-**The rest is off-site, and it is most of the effect.** A new domain with no inbound links
-ranks slowly no matter how good the markup is:
+**One entity, not twenty-six.** `PERSON` in `src/consts.ts` carries `@id`
+`https://yudhabhakti.com/#person`. Every page embeds that same node, and posts reference it
+as `author` and `publisher` by `@id` rather than repeating a name string. Search engines
+merge nodes sharing an `@id`, so all 26 pages reinforce one identity. `/about` additionally
+declares itself a `ProfilePage` with that person as `mainEntity`, which is how you nominate a
+single URL as *the* page representing the entity.
 
-1. **Make LinkedIn and GitHub say the same name string** as this site. Entity resolution is
-   string matching plus the `sameAs` links in the JSON-LD — mismatched names weaken it.
-2. **Put `yudhabhakti.com` in the LinkedIn "Website" field and the GitHub profile website
-   field.** These are the two highest-authority links you can give yourself for free, and
-   they are the strongest signal available to a new personal domain.
-3. **Add a GitHub profile README** (`bhaktiyudha/bhaktiyudha`) linking here.
-4. **Google Search Console** — verify the domain, submit
-   `https://yudhabhakti.com/sitemap-index.xml`, then use URL Inspection → Request Indexing on
-   the homepage. Do the same in Bing Webmaster Tools; it takes two minutes and feeds
-   DuckDuckGo.
-5. Expect **two to eight weeks** for the full name and longer for the short one. The exact
-   match between the domain and the query does a lot of work here, but not instantly.
+Add profiles to `SOCIAL` and they flow into `sameAs` automatically — no second list to keep
+in sync.
+
+### Verifying with search engines
+
+`VERIFICATION` in `src/consts.ts` holds the tokens. Paste only the token, not the whole tag;
+an empty string emits nothing.
+
+```ts
+export const VERIFICATION = {
+  google: 'abc123…',  // Search Console → Add property → URL prefix → HTML tag
+  bing: '',           // Bing Webmaster Tools → HTML Meta Tag
+} as const;
+```
+
+**Prefer the DNS method in Search Console** if you are willing to add a TXT record in
+Cloudflare. Choosing the *Domain* property type instead of *URL prefix* verifies the apex,
+`www`, and both schemes at once, and it does not depend on a meta tag surviving a redesign.
+
+### What is left, and it is most of the effect
+
+A four-day-old domain with no inbound links ranks slowly no matter how good the markup is.
+In rough order of impact:
+
+1. **Put `yudhabhakti.com` in the LinkedIn "Website" field and the GitHub profile website
+   field.** Both are empty right now. These are the highest-authority links you can give
+   yourself for free and the strongest signal available to a new personal domain.
+2. **Google Search Console** — verify, submit `https://yudhabhakti.com/sitemap-index.xml`,
+   then URL Inspection → Request Indexing on the homepage. Repeat in Bing Webmaster Tools;
+   two minutes, and it feeds DuckDuckGo.
+3. **A GitHub profile README** at `bhaktiyudha/bhaktiyudha` linking here.
+4. **Name consistency.** Your GitHub display name is already `Yudha Bhakti Nugraha` — match
+   it on LinkedIn so all three `sameAs` targets agree.
+
+Expect **two to eight weeks** for the full name, longer for `Yudha Bhakti` alone since other
+people share it. The exact match between the domain and the query does a lot of work, but not
+instantly.
 
 ---
 

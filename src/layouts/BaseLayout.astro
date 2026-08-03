@@ -1,5 +1,5 @@
 ---
-import { SITE, NAV, SOCIAL } from '../consts';
+import { SITE, NAV, SOCIAL, PERSON, PERSON_ID, VERIFICATION } from '../consts';
 import '../styles/global.css';
 
 interface Props {
@@ -9,6 +9,8 @@ interface Props {
   image?: string;
   /** Emit BlogPosting structured data instead of the default Person/WebSite. */
   article?: { published: Date; updated?: Date; tags?: string[] };
+  /** Page-specific structured data, replacing the default Person node. */
+  schema?: object;
 }
 
 const {
@@ -16,6 +18,7 @@ const {
   description = SITE.description,
   image = '/og.png',
   article,
+  schema,
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — ${SITE.tagline}`;
@@ -26,39 +29,35 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href.repla
 const ogImage = image ? new URL(image, Astro.site ?? SITE.url).href : undefined;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
-const personSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: SITE.author,
-  alternateName: SITE.shortName,
-  url: SITE.url,
-  email: SITE.email,
-  jobTitle: 'Technical Lead',
-  description: SITE.description,
-  address: { '@type': 'PostalAddress', addressLocality: 'Jakarta', addressCountry: 'ID' },
-  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universitas Gadjah Mada' },
-  knowsAbout: [
-    'Solution Architecture',
-    'Cloud Computing',
-    'Embedded Systems',
-    'Edge Computing',
-    'Applied AI',
-    'Retrieval-Augmented Generation',
-  ],
-  sameAs: ['https://github.com/bhaktiyudha', 'https://linkedin.com/in/yudhabhakti'],
-};
+const personSchema = { '@context': 'https://schema.org', ...PERSON };
 
+// Posts emit the article alongside a breadcrumb trail, so results show
+// yudhabhakti.com › Writing › <title> rather than a bare URL.
 const articleSchema = article && {
   '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: title,
-  description,
-  datePublished: article.published.toISOString(),
-  dateModified: (article.updated ?? article.published).toISOString(),
-  author: { '@type': 'Person', name: SITE.author, url: SITE.url },
-  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
-  ...(article.tags?.length ? { keywords: article.tags.join(', ') } : {}),
-  ...(ogImage ? { image: ogImage } : {}),
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      headline: title,
+      description,
+      datePublished: article.published.toISOString(),
+      dateModified: (article.updated ?? article.published).toISOString(),
+      author: { '@id': PERSON_ID },
+      publisher: { '@id': PERSON_ID },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+      ...(article.tags?.length ? { keywords: article.tags.join(', ') } : {}),
+      ...(ogImage ? { image: ogImage } : {}),
+    },
+    PERSON,
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+        { '@type': 'ListItem', position: 2, name: 'Writing', item: `${SITE.url}/writing` },
+        { '@type': 'ListItem', position: 3, name: title },
+      ],
+    },
+  ],
 };
 ---
 
@@ -94,6 +93,7 @@ const articleSchema = article && {
     {ogImage && <meta property="og:image" content={ogImage} />}
     {ogImage && <meta property="og:image:width" content="1200" />}
     {ogImage && <meta property="og:image:height" content="630" />}
+    {ogImage && <meta property="og:image:alt" content={`${SITE.author} — ${SITE.tagline}`} />}
 
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title ?? SITE.title} />
@@ -112,9 +112,16 @@ const articleSchema = article && {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
+    {
+      VERIFICATION.google && (
+        <meta name="google-site-verification" content={VERIFICATION.google} />
+      )
+    }
+    {VERIFICATION.bing && <meta name="msvalidate.01" content={VERIFICATION.bing} />}
+
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(articleSchema ?? personSchema)}
+      set:html={JSON.stringify(schema ?? articleSchema ?? personSchema)}
     />
   </head>
 

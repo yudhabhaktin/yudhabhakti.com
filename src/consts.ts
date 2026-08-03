@@ -27,3 +27,43 @@ export const SOCIAL = [
   { href: 'https://linkedin.com/in/yudhabhakti', label: 'LinkedIn' },
   { href: `mailto:${SITE.email}`, label: 'Email' },
 ] as const;
+
+/**
+ * Search-engine ownership verification. Paste only the token — the `content="…"`
+ * value from the HTML-tag method, not the whole tag. Empty means nothing is emitted.
+ */
+export const VERIFICATION = {
+  google: '', // Search Console → Add property → HTML tag
+  bing: '', // Bing Webmaster Tools → HTML Meta Tag
+} as const;
+
+/**
+ * One canonical description of the person, referenced by `@id` from every other
+ * schema on the site. Search engines merge nodes that share an `@id`, so the
+ * author of a post and the subject of /about resolve to a single entity rather
+ * than to three similar-looking people.
+ */
+export const PERSON_ID = `${SITE.url}/#person`;
+
+export const PERSON = {
+  '@type': 'Person',
+  '@id': PERSON_ID,
+  name: SITE.author,
+  alternateName: SITE.shortName,
+  url: SITE.url,
+  email: SITE.email,
+  jobTitle: 'Technical Lead',
+  description: SITE.description,
+  address: { '@type': 'PostalAddress', addressLocality: 'Jakarta', addressCountry: 'ID' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universitas Gadjah Mada' },
+  knowsLanguage: ['id', 'en'],
+  knowsAbout: [
+    'Solution Architecture',
+    'Cloud Computing',
+    'Embedded Systems',
+    'Edge Computing',
+    'Applied AI',
+    'Retrieval-Augmented Generation',
+  ],
+  sameAs: SOCIAL.filter((s) => s.href.startsWith('http')).map((s) => s.href),
+} as const;
