@@ -14,13 +14,14 @@ pnpm preview    # serve the built output
 
 ## ⚠️ Before you deploy — read this
 
-### 1. There is a credentials file in this directory
+### 1. There are credentials in this directory
 
 A file named `env` sits in the project root containing a GitHub PAT, two Cloudflare API
-tokens, R2 access keys, and Tencent + Alibaba Cloud keys.
+tokens, R2 access keys, and Tencent + Alibaba Cloud keys. If you have also added a `.env`,
+the same applies to it.
 
-It is in `.gitignore` and is **not** tracked by git. But it should not live in a web project
-directory at all:
+Both are in `.gitignore` and **neither is tracked by git** — verified. But they should not
+live in a web project directory at all:
 
 - **Move it** somewhere outside this repo (`~/.config/` or a password manager).
 - **Rotate the tokens.** They have been sitting in plaintext in a directory that is now a git
@@ -41,17 +42,25 @@ the kind of thing that surfaces awkwardly in a background check.
 
 ### 3. The blog posts are drafts
 
-Three posts are written and publishable, but you should read them first — they are in your
-voice and I wrote them from your resume and public repo.
+Twelve posts are written and publishable, backdated across 2015–2026. They are in your voice,
+written from your resume, your public repo, and your LinkedIn. **Read them before they go
+live.** Several contain `<!-- TODO(yudha): ... -->` comments marking where a specific detail
+or a photo would help — those are HTML comments and do not render.
+
+**Highest priority to verify:**
 
 | Post | What to check |
 |---|---|
-| `from-nanosatellites-to-palm-oil-estates.md` | The personal details are inferred from your CV. Make them yours. |
-| `building-bykami.md` | Written from the public repo. Verify the business lines and roadmap are accurate and that you are comfortable publishing them. |
-| `hybrid-retrieval-structured-and-unstructured.md` | Deliberately de-identified. Confirm nothing reads as employer-specific. |
+| `komurindo-antenna-tracker.md` | **Year and placement.** I dated it 2015 from your degree timeline. Search surfaced a 1st place in Muatan Roket at KOMURINDO/KOMBAT 2015 under *"Yudha Bakti Nugroho, ELINS UGM"* — different spelling, so I did **not** claim it. If that was you, add it. If not, leave it out. |
+| `detection-thresholds-and-the-cost-of-being-wrong.md` | BATAN work. Written deliberately conceptual — no thresholds, no architecture, no capabilities. Confirm you are comfortable with even this level. |
+| `building-bykami.md` | Written from the public repo. Verify the business lines and roadmap, and that you want them public. |
+| `migrating-source-control-for-an-organisation.md` | De-identified by design — no employer, no counts, no identity/residency detail. Confirm nothing reads as attributable. |
+| `the-year-i-stopped-shipping-code.md` | Personal reflection on becoming a lead. Check the tone is one you want colleagues reading. |
 
-Each contains `<!-- TODO(yudha): ... -->` comments marking spots where a specific detail or
-a photo would help. These are HTML comments — they do not render.
+**Lower risk, still worth a read:** `kri-2017-teaching-a-robot-to-dance`,
+`ugmsat-1-no-patch-window`, `modbus-mqtt-and-the-factory-floor`,
+`models-that-are-fast-in-the-lab`, `what-170-hours-of-mentoring-taught-me`,
+`from-nanosatellites-to-palm-oil-estates`, `hybrid-retrieval-structured-and-unstructured`.
 
 ---
 
@@ -122,10 +131,40 @@ provided the domain's nameservers already point at Cloudflare.
 
 Add both `yudhabhakti.com` and `www.yudhabhakti.com` if you want the `www` form to resolve.
 
-### Continuous deployment (optional)
+### Continuous deployment via GitHub Actions
 
-Push this repo to GitHub, then connect it under **Workers & Pages → Create → Import a
-repository**. Build command `pnpm build`, output directory `dist`.
+`.github/workflows/deploy.yml` builds on every push and pull request, and deploys to
+Cloudflare only on pushes to `main`.
+
+**GitHub Actions does not read `.env`.** That file is local-only and gitignored. CI secrets
+must be added to the repository:
+
+**Settings → Secrets and variables → Actions → New repository secret**
+
+| Secret | Where to find it |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → My Profile → API Tokens → Create Token → **Edit Cloudflare Workers** template |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard sidebar, or the subdomain of your R2 endpoint URL |
+
+Create a **fresh, scoped** token for CI rather than reusing an existing one. If it is ever
+exposed in a log, you want to revoke it without breaking anything else.
+
+Then:
+
+```bash
+git remote add origin git@github.com:bhaktiyudha/yudhabhakti.com.git
+git push -u origin main
+```
+
+Safety properties of the workflow, so you know what it will and will not do:
+
+- Pull requests **build but never deploy** — guarded by `if:` and by GitHub withholding
+  secrets from fork PRs.
+- `permissions: contents: read` — the workflow cannot write to your repository.
+- `concurrency` with `cancel-in-progress` — a newer push supersedes an in-flight deploy
+  rather than racing it.
+- No untrusted event data (PR titles, commit messages, branch names) reaches any `run:`
+  step, so there is no script-injection path.
 
 ---
 
