@@ -1,17 +1,21 @@
 ---
-title: Moving an organisation between source control platforms
+title: Moving an organisation from GitLab to GitHub
 description: >-
   The repositories are the easy part. Everything expensive is attached to them, and most
   of it is not in git.
-published: 2025-12-07
+published: 2026-06-28
 tags: ['platform', 'ci-cd', 'migration', 'engineering-management']
 ---
 
-I have led a migration of an engineering organisation from one source control platform to
-another — many repositories, many developers, several teams, on a deadline.
+Between May and June this year I led a migration of an engineering organisation from GitLab
+Enterprise to GitHub Enterprise — many repositories, many developers, several teams, on a
+deadline that did not move.
 
 This is a generic account. No employer, no counts, no infrastructure detail. What follows is
 the shape of the problem, which is the part that transfers.
+
+Two months sounds like a lot until you notice that none of it is quiet time. Everyone is
+mid-delivery on something else, and a migration is a thing you do *around* the actual work.
 
 ## The repos migrate in an afternoon
 
@@ -36,10 +40,16 @@ the actual constraint.
 
 ## Pipelines are a rewrite, so be honest about it
 
-CI configuration does not port. The concepts map roughly — jobs, steps, caching, artefacts —
-but the syntax, the runner model, and the security boundaries differ enough that a
-mechanical translation produces something that half-works, which is worse than something
-that visibly does not.
+CI configuration does not port. `.gitlab-ci.yml` and GitHub Actions workflows describe the
+same ideas — jobs, steps, caching, artefacts — but the syntax, the runner model, and the
+security boundaries differ enough that a mechanical translation produces something that
+half-works, which is worse than something that visibly does not.
+
+The differences that cost the most time were structural rather than syntactic. GitLab's
+stage model and Actions' job-dependency graph express ordering differently. Anything relying
+on GitLab's built-in registry or environment semantics needs a deliberate replacement rather
+than a rename. And `include:` templates do not map cleanly onto reusable workflows, which is
+the difference between an afternoon and a fortnight if a lot of your config was shared.
 
 Two things helped more than anything else.
 

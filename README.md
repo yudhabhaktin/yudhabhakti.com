@@ -33,10 +33,10 @@ a scoped OAuth credential rather than a long-lived key.
 
 ### 2. The blog posts are drafts
 
-Twelve posts are written and publishable, backdated across 2015–2026. They are in your voice,
-written from your resume, your public repo, and your LinkedIn. **Read them before they go
-live.** Several contain `<!-- TODO(yudha): ... -->` comments marking where a specific detail
-or a photo would help — those are HTML comments and do not render.
+Seventeen posts are written and publishable, backdated across 2015–2026. They are in your
+voice, written from your resume, your public repo, and your LinkedIn. **Read them before they
+go live.** Several contain `<!-- TODO(yudha): ... -->` comments marking where a specific
+detail or a photo would help — those are HTML comments and do not render.
 
 **Highest priority to verify:**
 
@@ -47,11 +47,15 @@ or a photo would help — those are HTML comments and do not render.
 | `building-bykami.md` | Written from the public repo. Verify the business lines and roadmap, and that you want them public. |
 | `migrating-source-control-for-an-organisation.md` | De-identified by design — no employer, no counts, no identity/residency detail. Confirm nothing reads as attributable. |
 | `the-year-i-stopped-shipping-code.md` | Personal reflection on becoming a lead. Check the tone is one you want colleagues reading. |
+| `empathy-is-not-niceness.md` | **Contains an anecdote about managing an underperforming engineer.** Anonymous, but a former colleague could plausibly recognise themselves. Decide whether you want that public, and soften or cut it if not. |
+| `monorepo-to-multirepo.md` | Describes team structure and vendor access boundaries. No employer named and no counts, but read it as someone who knows where you worked. |
 
 **Lower risk, still worth a read:** `kri-2017-teaching-a-robot-to-dance`,
 `ugmsat-1-no-patch-window`, `modbus-mqtt-and-the-factory-floor`,
 `models-that-are-fast-in-the-lab`, `what-170-hours-of-mentoring-taught-me`,
-`from-nanosatellites-to-palm-oil-estates`, `hybrid-retrieval-structured-and-unstructured`.
+`from-nanosatellites-to-palm-oil-estates`, `hybrid-retrieval-structured-and-unstructured`,
+`system-design-documents-people-read`, `six-months-of-claude-code`,
+`what-agents-change-about-software-work`.
 
 ---
 
