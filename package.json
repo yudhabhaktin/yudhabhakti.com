@@ -14,7 +14,6 @@
     "cf-preview": "astro build && wrangler dev"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.6.0",
     "astro": "^5.16.0"
   },

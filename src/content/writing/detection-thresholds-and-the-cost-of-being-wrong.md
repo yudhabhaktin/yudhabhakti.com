@@ -3,14 +3,16 @@ title: Detection thresholds and the cost of being wrong
 description: >-
   Working on a radiation portal monitor taught me that choosing a threshold is not a
   technical decision. It is a decision about which mistake you would rather make.
-published: 2018-11-10
+published: 2018-02-26
 tags: ['embedded', 'instrumentation', 'statistics', 'campus']
 ---
 
-In 2018 I worked on the embedded side of a radiation portal monitor — the "Merah Putih"
-system — built for BATAN, Indonesia's national nuclear energy agency. A portal monitor is
-the thing a vehicle drives through that decides whether it is carrying something it should
-not be.
+Over January and February this year I worked on the embedded side of a radiation portal
+monitor — the "Merah Putih" system — built for BATAN, Indonesia's national nuclear energy
+agency. A portal monitor is the thing a vehicle drives through that decides whether it is
+carrying something it should not be.
+
+Two months is not long. It was long enough to overturn the assumption I walked in with.
 
 I am going to keep this conceptual rather than specific. The general problem is well
 documented in the public literature and worth writing about; the particulars of a detection

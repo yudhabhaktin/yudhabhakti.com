@@ -30,6 +30,7 @@ const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: SITE.author,
+  alternateName: SITE.shortName,
   url: SITE.url,
   email: SITE.email,
   jobTitle: 'Technical Lead',
@@ -109,7 +110,6 @@ const articleSchema = article && {
     }
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <script
@@ -164,7 +164,6 @@ const articleSchema = article && {
       <div class="wrap site-foot__inner">
         <nav aria-label="Elsewhere">
           {SOCIAL.map((s) => <a href={s.href} rel="me noopener">{s.label}</a>)}
-          <a href="/rss.xml">RSS</a>
         </nav>
         <p class="site-foot__note">Jakarta, Indonesia · UTC+7</p>
       </div>

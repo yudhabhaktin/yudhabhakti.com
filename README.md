@@ -35,9 +35,9 @@ a scoped OAuth credential rather than a long-lived key.
 
 ### 2. The blog posts are drafts
 
-Seventeen posts are written and publishable, backdated across 2015–2026. They are in your
-voice, written from your resume, your public repo, and your LinkedIn. **Read them before they
-go live.** Several contain `<!-- TODO(yudha): ... -->` comments marking where a specific
+Twenty-one posts are written and publishable, backdated across 2015–2026 and aligned to the
+timeline on `/work`. They are in your voice, written from your resume, your public repo, and
+your LinkedIn. **Read them before they go live.** Several contain `<!-- TODO(yudha): ... -->` comments marking where a specific
 detail or a photo would help — those are HTML comments and do not render.
 
 **Highest priority to verify:**
@@ -51,13 +51,16 @@ detail or a photo would help — those are HTML comments and do not render.
 | `the-year-i-stopped-shipping-code.md` | Personal reflection on becoming a lead. Check the tone is one you want colleagues reading. |
 | `empathy-is-not-niceness.md` | **Contains an anecdote about managing an underperforming engineer.** Anonymous, but a former colleague could plausibly recognise themselves. Decide whether you want that public, and soften or cut it if not. |
 | `monorepo-to-multirepo.md` | Describes team structure and vendor access boundaries. No employer named and no counts, but read it as someone who knows where you worked. |
+| `when-the-camera-and-the-lidar-disagree.md` | **The toll work, written technically.** Deliberately does not name the employer, the road network, or any accuracy or deployment figure — same convention as `models-that-are-fast-in-the-lab`. Confirm you are comfortable with the level of detail on fusion logic and rollout. |
+| `starting-over-on-purpose.md` | Names Sinar Mas and the talent programme, and is candid about what you did not know at the time. Check the tone reads as self-aware rather than self-critical. |
+| `why-i-joined-a-startup-inside-a-telco.md` | Names Telkom and Evomo, and characterises what a corporate-incubated venture costs you in speed. Fair and non-specific, but read it as a former colleague would. |
 
 **Lower risk, still worth a read:** `kri-2017-teaching-a-robot-to-dance`,
 `ugmsat-1-no-patch-window`, `modbus-mqtt-and-the-factory-floor`,
-`models-that-are-fast-in-the-lab`, `what-170-hours-of-mentoring-taught-me`,
-`from-nanosatellites-to-palm-oil-estates`, `hybrid-retrieval-structured-and-unstructured`,
-`system-design-documents-people-read`, `six-months-of-claude-code`,
-`what-agents-change-about-software-work`.
+`lora-is-not-wifi-with-better-range`, `models-that-are-fast-in-the-lab`,
+`what-170-hours-of-mentoring-taught-me`, `from-nanosatellites-to-palm-oil-estates`,
+`hybrid-retrieval-structured-and-unstructured`, `system-design-documents-people-read`,
+`six-months-of-claude-code`, `what-agents-change-about-software-work`.
 
 ---
 
@@ -86,7 +89,7 @@ src/
   content.config.ts       blog schema
   content/writing/*.md    posts
   layouts/BaseLayout.astro  <head>, SEO, header, footer, theme toggle
-  pages/                  index, writing, work, projects, about, 404, rss
+  pages/                  index, writing, work, projects, about, 404
   styles/global.css       the whole design system
   plugins/                reading-time remark plugin
 ```
@@ -107,7 +110,7 @@ draft: false
 Body in markdown.
 ```
 
-`draft: true` hides it from the site, listings, and RSS. The URL is the filename.
+`draft: true` hides it from the site and from listings. The URL is the filename.
 
 ---
 
@@ -246,17 +249,46 @@ Already handled:
 - Unique `<title>` and meta description per page, one `<h1>` per page
 - Canonical URLs, Open Graph, Twitter cards
 - JSON-LD: `Person` sitewide, `BlogPosting` on posts
-- `sitemap-index.xml`, `robots.txt`, RSS at `/rss.xml`
+- `sitemap-index.xml`, `robots.txt`
+- Social preview image at `public/og.png`, default for every page
 - Semantic landmarks, skip link, `prefers-reduced-motion`, light/dark with no FOUC
 
-Still worth doing:
+### Ranking for your own name
 
-**Add a social preview image.** Drop a 1200×630 PNG at `public/og.png` and pass
-`image="/og.png"` to `BaseLayout` (or set it as the default in `BaseLayout.astro`). Without
-one, links shared to LinkedIn and Slack render as a plain text card. This matters more than
-it sounds for a site you are putting on job applications.
+The goal is that searching **Yudha Bhakti** returns this site. The site uses the full name,
+**Yudha Bhakti Nugraha**, everywhere a machine reads it:
 
-**Submit to Google Search Console** after the domain is live, and paste in the sitemap URL.
+| Place | Value |
+|---|---|
+| `<title>` (every page) | ends with `Yudha Bhakti Nugraha` |
+| Homepage `<h1>` | contains the full name |
+| `<meta name="author">` | full name |
+| JSON-LD `Person.name` | full name |
+| JSON-LD `Person.alternateName` | `Yudha Bhakti` |
+| Header brand | `yudha bhakti` — short, because the header overflows at 320px otherwise |
+
+The reasoning: the full name **contains** the short one, so pages stay fully eligible for the
+`Yudha Bhakti` query while being distinctive enough to rank first for the full one almost
+immediately. `alternateName` is what tells Google the two strings are one entity rather than
+two people.
+
+`SITE.title` and `SITE.shortName` in `src/consts.ts` control this. Do not diverge them.
+
+**The rest is off-site, and it is most of the effect.** A new domain with no inbound links
+ranks slowly no matter how good the markup is:
+
+1. **Make LinkedIn and GitHub say the same name string** as this site. Entity resolution is
+   string matching plus the `sameAs` links in the JSON-LD — mismatched names weaken it.
+2. **Put `yudhabhakti.com` in the LinkedIn "Website" field and the GitHub profile website
+   field.** These are the two highest-authority links you can give yourself for free, and
+   they are the strongest signal available to a new personal domain.
+3. **Add a GitHub profile README** (`bhaktiyudha/bhaktiyudha`) linking here.
+4. **Google Search Console** — verify the domain, submit
+   `https://yudhabhakti.com/sitemap-index.xml`, then use URL Inspection → Request Indexing on
+   the homepage. Do the same in Bing Webmaster Tools; it takes two minutes and feeds
+   DuckDuckGo.
+5. Expect **two to eight weeks** for the full name and longer for the short one. The exact
+   match between the domain and the query does a lot of work here, but not instantly.
 
 ---
 

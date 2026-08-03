@@ -24,8 +24,8 @@ That does something to how you write software. You stop treating "it compiles" a
 You start asking what happens when the sensor returns garbage, when the clock drifts, when
 power browns out mid-write.
 
-Not long after, I worked on a radiation portal monitor built for BATAN, Indonesia's
-national nuclear energy agency. Same lesson, sharper edge. A detector that misses is not a
+Around the same stretch, I worked on a radiation portal monitor built for BATAN,
+Indonesia's national nuclear energy agency. Same lesson, sharper edge. A detector that misses is not a
 bug report — it is a thing that did not get caught.
 
 Somewhere in the middle of all that, a team of us placed third and took Best Design at
