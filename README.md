@@ -118,13 +118,47 @@ pnpm wrangler login     # one time, OAuth — do not use the token in `env`
 pnpm deploy             # builds, then deploys
 ```
 
-### Connecting yudhabhakti.com
+### One-time account setup
 
-Once deployed, in the Cloudflare dashboard: **Workers & Pages → yudhabhakti-com → Domains →
-Add existing domain**. Cloudflare creates the DNS record and issues the certificate itself,
-provided the domain's nameservers already point at Cloudflare.
+A brand-new Cloudflare account cannot deploy a Worker until two things exist. Both are
+dashboard-only — the API refuses them.
 
-Add both `yudhabhakti.com` and `www.yudhabhakti.com` if you want the `www` form to resolve.
+**1. A workers.dev subdomain.** Without it wrangler has nowhere to publish and fails in CI
+with `You need to register a workers.dev subdomain`, because it cannot prompt
+non-interactively. Open [Workers & Pages](https://dash.cloudflare.com/?to=/:account/workers/workers-and-pages)
+once; loading the page creates it.
+
+**2. The domain as a Cloudflare zone**, if you want a custom domain. Buying the domain is not
+enough — its nameservers have to point at Cloudflare.
+
+### Moving yudhabhakti.com to Cloudflare
+
+The domain is registered with **Rumahweb Indonesia** and was on `nsid1–4.rumahweb.*`.
+
+1. Cloudflare dashboard → **Add a domain** → `yudhabhakti.com` → Free plan.
+2. The scan finds no records on a new domain. Add a placeholder A record for `@`
+   (e.g. `192.0.2.1`) so the zone is not empty; the Worker route supersedes it.
+3. Copy the two assigned `*.ns.cloudflare.com` nameservers.
+4. Rumahweb client area → the domain → nameservers → switch to custom and replace all four
+   `nsid*` entries with Cloudflare's two.
+5. Cloudflare → **Check nameservers**. Activation is usually minutes to a few hours.
+
+`clientTransferProhibited` does not block this — it blocks transfers, not NS changes.
+
+### Switching to the custom domain
+
+Once the zone is active, replace workers.dev publishing with a route in `wrangler.jsonc`:
+
+```jsonc
+"workers_dev": false,
+"routes": [
+  { "pattern": "yudhabhakti.com", "custom_domain": true },
+  { "pattern": "www.yudhabhakti.com", "custom_domain": true }
+]
+```
+
+`custom_domain: true` makes Cloudflare create the DNS record and issue the certificate on
+deploy. Do not add this before the zone is active — the deploy will fail.
 
 ### Continuous deployment via GitHub Actions
 
