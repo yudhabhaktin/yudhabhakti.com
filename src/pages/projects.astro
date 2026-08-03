@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    name: 'bykami',
+    year: '2025 — present',
+    now: true,
+    blurb:
+      'A multi-vertical local platform for a business in Banyuwangi, East Java — self-service photo studio, on-location photo and video, and F&B under one brand, with shared identity, loyalty, and booking. A Go monolith on a single box, plus a kiosk agent that keeps working when the network does not.',
+    tags: ['Go', 'SQLite', 'TypeScript', 'Terraform', 'Ansible', 'Cloudflare Tunnel'],
+    links: [
+      { href: 'https://github.com/bhaktiyudha/bykami', label: 'Source' },
+      { href: '/writing/building-bykami', label: 'Write-up' },
+    ],
+  },
+  {
+    name: 'Samsung Innovation Campus — Mentor',
+    year: '2023',
+    blurb:
+      'Mentored on Batch 4 of Samsung Innovation Campus, run by Skilvul with Samsung Electronics Indonesia — 170 teaching hours across the program, working with students entering software engineering.',
+    tags: ['Mentoring', 'Curriculum', 'Community'],
+    links: [],
+  },
+  {
+    name: 'UGMSat-1 Nanosatellite',
+    year: '2017 — 2018',
+    blurb:
+      'Flight software and payload electronics for a university research nanosatellite. My first encounter with software that has no patch window, which turned out to shape everything after it.',
+    tags: ['Embedded', 'C', 'Flight software'],
+    links: [
+      { href: '/writing/from-nanosatellites-to-palm-oil-estates', label: 'Write-up' },
+    ],
+  },
+  {
+    name: 'Radiation Portal Monitor "Merah Putih"',
+    year: '2018',
+    blurb:
+      'Embedded detection system built for BATAN, Indonesia\'s National Nuclear Energy Agency.',
+    tags: ['Embedded', 'Instrumentation'],
+    links: [],
+  },
+  {
+    name: 'Kontes Robot Indonesia — Humanoid Robot Dance',
+    year: '2017',
+    blurb:
+      '3rd place and Best Design (team) at the national robotics competition run by the Ministry of Research and Technology. A robot that falls over mid-routine gives you very direct feedback.',
+    tags: ['Robotics', 'Controls'],
+    links: [],
+  },
+];
+
+const smaller = [
+  { name: 'webrtc-rtsp', desc: 'RTSP to WebRTC bridge in Go.', lang: 'Go' },
+  { name: 'golang-backend', desc: 'Backend service patterns in Go.', lang: 'Go' },
+  { name: 'nodemonitoring', desc: 'Node monitoring shell tooling.', lang: 'Shell' },
+  { name: 'networkmonitoring', desc: 'Network monitoring shell tooling.', lang: 'Shell' },
+];
+---
+
+<BaseLayout
+  title="Projects"
+  description="Things I have built — a local business platform in East Java, a university nanosatellite, a radiation portal monitor, and a dancing robot."
+>
+  <section class="hero">
+    <h1>Projects</h1>
+    <p class="hero__lede">
+      Things I built because I wanted them to exist, or because someone needed them to work.
+      The range is wide on purpose &mdash; it is the same instinct pointed at different
+      hardware.
+    </p>
+  </section>
+
+  <section>
+    <ol class="track">
+      {
+        projects.map((p) => (
+          <li class="track__item" data-now={p.now ? '' : undefined}>
+            <div class="track__meta"><span>{p.year}</span></div>
+            <h2 class="track__role">{p.name}</h2>
+            <div class="track__body">
+              <p>{p.blurb}</p>
+              {p.tags.length > 0 && (
+                <ul class="tags">
+                  {p.tags.map((t) => <li class="tag">{t}</li>)}
+                </ul>
+              )}
+              {p.links.length > 0 && (
+                <ul class="inline-links" style="margin-block-start: 0.85rem;">
+                  {p.links.map((l) => (
+                    <li><a href={l.href}>{l.label}</a></li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section>
+    <h2 class="label">Smaller things on GitHub</h2>
+    <ul class="entries">
+      {
+        smaller.map((s) => (
+          <li class="entry">
+            <a class="entry__link" href={`https://github.com/bhaktiyudha/${s.name}`}>
+              <span class="entry__date">{s.lang}</span>
+              <span class="entry__title">{s.name}</span>
+              <span class="entry__desc">{s.desc}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a class="more" href="https://github.com/bhaktiyudha">All repositories</a>
+  </section>
+</BaseLayout>

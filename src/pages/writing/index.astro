@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.published.valueOf() - a.data.published.valueOf()
+);
+---
+
+<BaseLayout
+  title="Writing"
+  description="Notes on embedded systems, cloud architecture, applied AI, and the seam between software and the physical world."
+>
+  <section class="hero">
+    <h1>Writing</h1>
+    <p class="hero__lede">
+      Notes on things I have built and things I got wrong. Mostly embedded systems, cloud
+      architecture, and applied AI. <a href="/rss.xml">RSS</a> if you prefer.
+    </p>
+  </section>
+
+  <section>
+    <ul class="entries">
+      {
+        posts.map((post) => (
+          <li class="entry">
+            <a class="entry__link" href={`/writing/${post.id}`}>
+              <FormattedDate date={post.data.published} class="entry__date" />
+              <span class="entry__title">{post.data.title}</span>
+              <span class="entry__desc">{post.data.description}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

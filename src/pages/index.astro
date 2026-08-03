@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SOCIAL } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <h1>Halo, I&rsquo;m Yudha &mdash; I build systems that reach into the physical world.</h1>
+    <p class="hero__lede">
+      Satellites, toll gates, factory floors, and the cloud platforms behind them. These days
+      I lead engineering teams on <strong>enterprise integration, platform work, and applied
+      AI</strong> &mdash; but I started in embedded systems, and it still shows in how I build.
+      Based in Jakarta, Indonesia.
+    </p>
+
+    <ul class="inline-links">
+      {SOCIAL.map((s) => <li><a href={s.href} rel="me noopener">{s.label}</a></li>)}
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="label">Writing</h2>
+    <ul class="entries">
+      {
+        posts.map((post) => (
+          <li class="entry">
+            <a class="entry__link" href={`/writing/${post.id}`}>
+              <FormattedDate date={post.data.published} class="entry__date" />
+              <span class="entry__title">{post.data.title}</span>
+              <span class="entry__desc">{post.data.description}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a class="more" href="/writing">All writing</a>
+  </section>
+
+  <section>
+    <h2 class="label">Now</h2>
+    <div class="flow">
+      <p class="muted">
+        Building <a href="https://github.com/bhaktiyudha/bykami">bykami</a>, a multi-vertical
+        local platform in Banyuwangi &mdash; a Go monolith on one small box, with a
+        self-service photo booth attached to it. It is the first thing in years where I own
+        every decision end to end.
+      </p>
+      <p class="muted">
+        Mentoring is the other constant. I spent 170 hours as a mentor on Samsung Innovation
+        Campus, and teaching people to debug their own thinking has made me better at it.
+      </p>
+    </div>
+    <a class="more" href="/projects">What I&rsquo;ve built</a>
+  </section>
+</BaseLayout>

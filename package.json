@@ -1,0 +1,23 @@
+{
+  "name": "yudhabhakti-com",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "deploy": "astro build && wrangler deploy",
+    "cf-preview": "astro build && wrangler dev"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.118.0"
+  }
+}

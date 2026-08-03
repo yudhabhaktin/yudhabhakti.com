@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yudhabhakti.com/sitemap-index.xml

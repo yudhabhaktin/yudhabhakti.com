@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, SOCIAL } from '../consts';
+---
+
+<BaseLayout
+  title="About"
+  description="Yudha Bhakti — engineer in Jakarta, Indonesia. Embedded systems, cloud platforms, applied AI, and the seam between them."
+>
+  <section class="hero">
+    <h1>About</h1>
+  </section>
+
+  <section>
+    <div class="prose">
+      <p>
+        I&rsquo;m Yudha, an engineer in Jakarta. I build and lead teams that deliver
+        enterprise platforms &mdash; the systems finance, operations, and compliance
+        functions actually run on &mdash; and I came to that from an unusual direction.
+      </p>
+
+      <p>
+        My degree at Universitas Gadjah Mada was Computer Science <em>and</em> Electronics.
+        That joint background is why hardware and edge computing keep reappearing in my
+        work: a university nanosatellite, a radiation portal monitor for the national
+        nuclear energy agency, a humanoid robot that placed third nationally, and later
+        vehicle classification models running on Jetson devices at toll gates.
+      </p>
+
+      <p>
+        Since then the work has moved up the stack &mdash; industrial IoT at a Telkom
+        venture, then toll infrastructure, then agribusiness, where I led a product team
+        across enterprise integration, platform engineering, and applied AI. The
+        technologies changed. The instinct did not: assume the network is bad, assume the
+        input is malformed, and find out whether anyone actually uses the thing.
+      </p>
+
+      <h2>What I&rsquo;m interested in</h2>
+
+      <p>
+        Three areas, roughly. <strong>Enterprise integration</strong> &mdash; connecting ERP,
+        HRIS, and banking systems through API middleware, and the stakeholder work that makes
+        those programs land. <strong>Applied AI</strong> &mdash; computer vision for
+        industrial inspection, and retrieval systems that answer questions spanning both
+        structured records and unstructured documents. <strong>Platform engineering</strong>
+        &mdash; CI/CD, source control at organisational scale, identity, and observability.
+      </p>
+
+      <p>
+        Outside of work I&rsquo;m building <a href="/projects">bykami</a>, a platform for a
+        small multi-vertical business in Banyuwangi. It is the first thing in years where I
+        own every architectural decision, and it has been a useful mirror.
+      </p>
+
+      <p>
+        I also mentor. I spent 170 hours on Samsung Innovation Campus working with people
+        entering the field, and I&rsquo;d do it again &mdash; teaching someone to debug their
+        own reasoning is a much better use of an afternoon than debugging it for them.
+      </p>
+
+      <h2>Working with me</h2>
+
+      <p>
+        I value disciplined execution, clear writing, and technology that removes work rather
+        than adding it. I&rsquo;d rather ship the boring version and learn from it than
+        design the interesting one in a document.
+      </p>
+
+      <p>
+        Reach me at <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. I read everything, and
+        I reply to most things.
+      </p>
+    </div>
+
+    <ul class="inline-links">
+      {SOCIAL.map((s) => <li><a href={s.href} rel="me noopener">{s.label}</a></li>)}
+    </ul>
+  </section>
+</BaseLayout>

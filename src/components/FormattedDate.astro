@@ -1,0 +1,19 @@
+---
+interface Props {
+  date: Date;
+  class?: string;
+  /** Short form shows year only in listings that are already grouped. */
+  format?: 'short' | 'long';
+}
+
+const { date, class: className, format = 'short' } = Astro.props;
+
+const formatted = date.toLocaleDateString('en-GB', {
+  year: 'numeric',
+  month: format === 'long' ? 'long' : 'short',
+  ...(format === 'long' ? { day: 'numeric' } : {}),
+  timeZone: 'UTC',
+});
+---
+
+<time class={className} datetime={date.toISOString()}>{formatted}</time>

@@ -1,0 +1,7 @@
+allowBuilds:
+  # Both are first-party Astro toolchain deps that need a postinstall to fetch
+  # their platform binaries (esbuild) and libvips bindings (sharp).
+  esbuild: true
+  sharp: true
+  # workerd is the Workers runtime wrangler runs locally.
+  workerd: true

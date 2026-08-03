@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// NOTE: this page is public. It deliberately carries no internal figures — no revenue,
+// contract values, headcounts, user counts, transaction volumes, or repository counts.
+// Those live in the CV, which goes to a named recipient. Keep it that way.
+
+const roles = [
+  {
+    org: 'Godrej Consumer Products',
+    // TODO(yudha): confirm this matches your offer letter exactly before deploying.
+    title: 'IT Application Specialist',
+    dates: 'Jul 2026 — Present',
+    now: true,
+    note: 'Commercial IT business partnering for Indonesia operations.',
+    points: [
+      'Partner with commercial stakeholders — sales, trade, and distribution — to translate business requirements into application solutions.',
+      'Enterprise application delivery and integration across SAP and connected commercial platforms.',
+    ],
+  },
+  {
+    org: 'Sinar Mas Agribusiness and Food (PT SMART Tbk)',
+    title: 'Digital Product Development Lead',
+    dates: 'May 2025 — Jul 2026',
+    note: 'Technical lead for a product team and external vendor teams.',
+    points: [
+      'The technical go-to for design guidance and production troubleshooting — translating business requirements into low-level technical design, and running refinement, planning, review, and retrospective with Agile practice adapted per team.',
+      'Set the engineering culture around code quality, scalability, and maintainability: structured code review, shared standards, and mentoring engineers.',
+      'Designed REST API middleware (TypeScript/Node.js) integrating ERP, HRIS, banking channels, and vendor APIs — decomposing monolithic integration flows into independently deployable services.',
+      'Owned CI/CD tooling and workflow org-wide: migration to self-hosted GitHub Enterprise, standardised GitHub Actions pipelines with self-hosted runners, and ELK/Grafana observability.',
+    ],
+  },
+  {
+    org: 'Sinar Mas Agribusiness and Food (PT SMART Tbk)',
+    title: 'Digital Engineer',
+    dates: 'Jun 2024 — May 2025',
+    points: [
+      'Built an LLM assistant end to end — vector database and retrieval-augmented generation with hybrid retrieval spanning SQL transaction data and unstructured safety and compliance content.',
+      'Built and deployed computer vision models (TensorFlow, PyTorch) automating truck-load quality inspection.',
+      'Consolidated line-of-business data into a centralised cloud analytics platform (GCP, BigQuery, dbt) for traceability and logistics insight.',
+    ],
+  },
+  {
+    org: 'Sinar Mas Agribusiness and Food (PT SMART Tbk)',
+    title: 'Digital Talent Program',
+    dates: 'Jun 2022 — May 2024',
+    points: [
+      'Rotational program across plantation, logistics, manufacturing, and corporate functions. Delivered SAP-integrated cross-platform mobile applications (Flutter) for stock opname and road condition monitoring across upstream estates.',
+    ],
+  },
+  {
+    org: 'PT Jasa Marga (Persero) Tbk',
+    title: 'Software and AI Engineer',
+    dates: 'Feb 2021 — Jun 2022',
+    note: "Indonesia's largest toll road operator.",
+    points: [
+      'Owned the delivery lifecycle of an AI-driven automatic vehicle classification program deployed across toll gates nationally — requirements, solution architecture, low-level design, multi-vendor coordination, and government stakeholder reporting.',
+      'Built the on-device AI stack in C++/Python: PyTorch models optimised with TensorRT for real-time inference on NVIDIA Jetson, fused with LiDAR input and integrated to automated toll gates and electronic toll collection.',
+      'Developed the React operations dashboard and Go REST backend; implemented CI/CD and Ansible-based rolling deployment across distributed edge devices with Prometheus/Grafana monitoring.',
+    ],
+  },
+  {
+    org: 'PT Telkom Indonesia Tbk',
+    title: 'Software and Hardware Engineer',
+    dates: 'Feb 2019 — Feb 2021',
+    note: "Evomo — industrial IoT venture incubated by Telkom's Digital Amoeba program.",
+    points: [
+      'Founding engineer on a product built from zero — took an industrial OEE platform from prototype to paying manufacturing customers, running demos and proofs of concept directly in client factories.',
+      'Built embedded firmware and the industrial telemetry integration layer (Modbus, MQTT, AMQP) for IoT gateways connecting machine-level sensors to a cloud platform.',
+      'Designed the multi-cloud architecture on AWS and GCP — API gateway, load-balanced containerised deployments — supporting high-availability SLAs for production manufacturing workloads.',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Work"
+  description="Seven years across agribusiness, toll infrastructure, and telecommunications — embedded and edge systems, cloud platforms, and applied AI."
+>
+  <section class="hero">
+    <h1>Work</h1>
+    <p class="hero__lede">
+      Seven years across agribusiness, toll infrastructure, and telecommunications. It started
+      with firmware and edge devices and moved toward platforms and teams, without ever quite
+      leaving the hardware behind.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="label">Experience</h2>
+    <ol class="track">
+      {
+        roles.map((role) => (
+          <li class="track__item" data-now={role.now ? '' : undefined}>
+            <div class="track__meta">
+              <span>{role.dates}</span>
+            </div>
+            <h3 class="track__role">{role.title}</h3>
+            <p class="track__org">
+              {role.org}
+              {role.note && <> · <span class="muted">{role.note}</span></>}
+            </p>
+            <div class="track__body">
+              <ul>
+                {role.points.map((p) => <li>{p}</li>)}
+              </ul>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section>
+    <h2 class="label">Education</h2>
+    <ol class="track">
+      <li class="track__item">
+        <div class="track__meta"><span>2014 — 2018</span></div>
+        <h3 class="track__role">B.Sc. Computer Science and Electronics</h3>
+        <p class="track__org">Universitas Gadjah Mada · Yogyakarta, Indonesia</p>
+        <div class="track__body">
+          <p>
+            The joint degree is why hardware, edge computing, and IoT keep turning up in my
+            work. <a href="/writing/from-nanosatellites-to-palm-oil-estates">More on that</a>.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2 class="label">Toolkit</h2>
+    <dl class="spec">
+      <dt>Languages</dt>
+      <dd>Go, Python, TypeScript/JavaScript, C++, SQL, Dart</dd>
+
+      <dt>Cloud &amp; ops</dt>
+      <dd>
+        AWS, Azure, GCP, Docker, Terraform, Ansible, GitHub Actions, ELK, Grafana, Prometheus
+      </dd>
+
+      <dt>Embedded &amp; edge</dt>
+      <dd>
+        NVIDIA Jetson, TensorRT, LiDAR sensor fusion, Modbus, MQTT, AMQP, on-device inference
+      </dd>
+
+      <dt>AI &amp; data</dt>
+      <dd>
+        LLM integration, RAG, vector databases, TensorFlow, PyTorch, computer vision,
+        PostgreSQL, BigQuery, dbt
+      </dd>
+
+      <dt>Integration</dt>
+      <dd>REST APIs, API middleware, SAP (ERP), Workday (HRIS), banking APIs</dd>
+    </dl>
+
+    <p class="note note--spaced">
+      <strong>Looking for the detailed version?</strong> Happy to send a CV —
+      <a href="mailto:yudha.bhakti.n@gmail.com">email me</a>.
+    </p>
+  </section>
+</BaseLayout>
