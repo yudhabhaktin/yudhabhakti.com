@@ -31,16 +31,7 @@ live in a web project directory at all:
 For deploying, authenticate with `wrangler login` instead of exporting a token — it stores
 a scoped OAuth credential rather than a long-lived key.
 
-### 2. Confirm your job title
-
-`src/pages/work.astro` lists your current role as **IT Application Specialist** at Godrej
-Consumer Products. That came from your own notes, which said "likely" — it is not confirmed.
-
-Check it against your offer letter and fix it before this goes live. Your CV, LinkedIn, and
-employment forms are consistent right now; a public site that disagrees with them is exactly
-the kind of thing that surfaces awkwardly in a background check.
-
-### 3. The blog posts are drafts
+### 2. The blog posts are drafts
 
 Twelve posts are written and publishable, backdated across 2015–2026. They are in your voice,
 written from your resume, your public repo, and your LinkedIn. **Read them before they go
