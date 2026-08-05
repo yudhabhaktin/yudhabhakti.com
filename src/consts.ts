@@ -137,6 +137,8 @@ export const PERSON = {
   knowsAbout: [
     'Solution Architecture',
     'Cloud Computing',
+    'Cloud Migration',
+    'Amazon Web Services',
     'Embedded Systems',
     'Edge Computing',
     'Applied AI',
