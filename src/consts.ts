@@ -61,8 +61,19 @@ export const PERSON = {
   alternateName: SITE.shortName,
   url: SITE.url,
   email: SITE.email,
-  jobTitle: 'Technical Lead',
+  jobTitle: 'IT Application Specialist',
+  worksFor: { '@type': 'Organization', name: 'Godrej Consumer Products' },
   description: SITE.description,
+  /**
+   * "Yudha Bhakti" alone is contested — it is also the former name of a listed
+   * Indonesian bank, and there are other people with the name. This property
+   * exists precisely to separate similar-named entities, so it leans on the
+   * things that are unique to this one: the field, the city, the employers.
+   * It deliberately does not mention the bank; naming it here would only
+   * associate the two.
+   */
+  disambiguatingDescription:
+    'Software and platform engineer based in Jakarta, Indonesia. Works on embedded systems, cloud platforms and applied AI; previously at Sinar Mas Agribusiness, Jasa Marga and Telkom Indonesia. Graduate of Universitas Gadjah Mada.',
   address: { '@type': 'PostalAddress', addressLocality: 'Jakarta', addressCountry: 'ID' },
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universitas Gadjah Mada' },
   knowsLanguage: ['id', 'en'],
