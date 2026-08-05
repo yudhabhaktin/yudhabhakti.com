@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
 
 const projects = [
   {
@@ -61,6 +62,7 @@ const smaller = [
 <BaseLayout
   title="Projects"
   description="Things I have built — a local business platform in East Java, a university nanosatellite, a radiation portal monitor, and a dancing robot."
+  breadcrumbs={[{ name: 'Home', item: SITE.url }, { name: 'Projects' }]}
 >
   <section class="hero">
     <h1>Projects</h1>

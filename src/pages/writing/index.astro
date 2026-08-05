@@ -2,10 +2,18 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE } from '../../consts';
 
 const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.published.valueOf() - a.data.published.valueOf()
 );
+
+// Declares the listing as a CollectionPage whose ItemList names every post, so
+// the index is understood as the parent of the 23 URLs rather than a leaf page.
+const listing = posts.map((post) => ({
+  name: post.data.title,
+  url: `${SITE.url}/writing/${post.id}`,
+}));
 
 // Group newest-first by year. Map preserves insertion order, so the groups come
 // out in the same order as the sorted posts.
@@ -19,6 +27,8 @@ for (const post of posts) {
 <BaseLayout
   title="Writing"
   description="Notes on embedded systems, edge computing, cloud architecture, and applied AI — from student rocket competitions to enterprise platforms."
+  collection={listing}
+  breadcrumbs={[{ name: 'Home', item: SITE.url }, { name: 'Writing' }]}
 >
   <section class="hero">
     <h1>Writing</h1>

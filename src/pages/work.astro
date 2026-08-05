@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
 
 // NOTE: this page is public. It deliberately carries no internal figures — no revenue,
 // contract values, headcounts, user counts, transaction volumes, or repository counts.
@@ -75,6 +76,7 @@ const roles = [
 <BaseLayout
   title="Work"
   description="Seven years across agribusiness, toll infrastructure, and telecommunications — embedded and edge systems, cloud platforms, and applied AI."
+  breadcrumbs={[{ name: 'Home', item: SITE.url }, { name: 'Work' }]}
 >
   <section class="hero">
     <h1>Work</h1>

@@ -12,7 +12,8 @@ pnpm build      # -> dist/
 pnpm preview    # serve the built output
 ```
 
-The only JavaScript shipped to the browser is a ~20-line theme toggle.
+The JavaScript shipped to the browser is a ~20-line inline theme toggle plus Astro's
+prefetch runtime (~2.3 kB, 1 kB gzipped), which warms a link on hover.
 
 ---
 
@@ -23,12 +24,16 @@ src/
   consts.ts                 site metadata, nav, social links, structured data — edit here first
   content.config.ts         blog schema
   content/writing/*.md      posts
-  layouts/BaseLayout.astro  <head>, SEO, header, footer, theme toggle
-  pages/                    index, writing, work, projects, about, 404
+  components/Seo.astro      every head tag search engines read — the only place SEO logic lives
+  lib/schema.ts             JSON-LD graph builders
+  layouts/BaseLayout.astro  document shell, header, footer, theme toggle
+  pages/                    index, writing, work, projects, about, 404, rss.xml
   styles/global.css         the whole design system
   plugins/                  reading-time remark plugin
 scripts/
   generate-og.mjs           builds public/og.png with sharp
+  generate-icons.mjs        builds public/apple-touch-icon.png with sharp
+  verify-seo.mjs            validates dist/ — runs in CI, blocks the deploy on failure
   check-cf-token.mjs        diagnoses a Cloudflare API token before it goes into CI
 ```
 
@@ -72,10 +77,37 @@ logical properties throughout.
 - Static pre-rendered HTML — crawlers get full content with no JS execution
 - Unique `<title>` and meta description per page, one `<h1>` per page
 - Canonical URLs, Open Graph, Twitter cards, `og:image` on every page
-- JSON-LD: one `Person` node referenced by `@id` from every page, `BlogPosting` +
-  `BreadcrumbList` on posts, `ProfilePage` on `/about`
-- `sitemap-index.xml` with `lastmod` on every post, `robots.txt`
+- JSON-LD `@graph` per page: `WebSite` + `Person` + a page node, joined by `@id`
+- `sitemap-index.xml` with `lastmod` on every post, `robots.txt`, `/rss.xml`
 - Semantic landmarks, skip link, `prefers-reduced-motion`, no layout shift
+
+All of it lives in `src/components/Seo.astro`, which `BaseLayout` renders once. Pages pass
+*intent* — a title, an `article`, a `collection`, `profile`, `noindex` — and never assemble
+tags themselves, so there is no per-page SEO logic to drift.
+
+### One URL per page
+
+Every page is addressed **without a trailing slash**, and four things have to agree on that
+or the site quietly redirects its own canonical URLs:
+
+| Where | What enforces it |
+|---|---|
+| Canonical tag, OG/Twitter URLs, JSON-LD `@id`s | `Seo.astro` strips the slash |
+| Internal links | authored slashless |
+| `sitemap-0.xml` | `serialize()` in `astro.config.mjs` normalises every entry |
+| The edge | `html_handling: "drop-trailing-slash"` in `wrangler.jsonc` |
+
+The Astro-side `trailingSlash: 'never'` sets the intent; the sitemap `serialize()` normalises
+regardless, so a future integration change cannot silently reintroduce the mismatch. The RSS
+route passes `trailingSlash: false` for the same reason — `@astrojs/rss` defaults it to true.
+
+`pnpm verify` enforces the agreement, and CI runs it between build and deploy. It is worth
+having because the failure is invisible locally: the build stays green, every page renders,
+and only a crawler ever sees the redirect.
+
+```bash
+pnpm build && pnpm verify
+```
 
 ### One entity, not twenty-six
 
@@ -83,6 +115,20 @@ logical properties throughout.
 embeds that node, and posts reference it as `author` and `publisher` by `@id` rather than
 repeating a name string. Search engines merge nodes sharing an `@id`, so every page
 reinforces one identity instead of presenting several similar-looking ones.
+
+`src/lib/schema.ts` builds the graph. Three stable ids anchor it — `#person`, `#website`, and
+`<url>#webpage` — and the page node narrows by what the page is:
+
+| Page | Page node | Also in the graph |
+|---|---|---|
+| `/` | `WebPage` | — |
+| `/writing` | `CollectionPage` + `ItemList` of every post | `BreadcrumbList` |
+| `/writing/*` | `WebPage` | `BlogPosting`, `BreadcrumbList` |
+| `/about` | `ProfilePage` (person as `mainEntity`) | `BreadcrumbList` |
+| `/work`, `/projects` | `WebPage` | `BreadcrumbList` |
+
+`/work` and `/projects` are deliberately **not** `CollectionPage`: their items have no URLs of
+their own, and an `ItemList` of unlinkable entries is worse than none.
 
 `/about` declares itself a `ProfilePage` with that person as `mainEntity`, nominating a
 single canonical URL as *the* page representing the entity.
@@ -126,6 +172,12 @@ pnpm deploy             # builds, then deploys
 off, so there is a single origin matching the canonical URLs the pages emit.
 `custom_domain: true` makes Cloudflare create the DNS record and issue the certificate on
 deploy — the zone must already be active, or the deploy fails.
+
+`html_handling: "drop-trailing-slash"` is what makes `/about` serve a 200 and `/about/` a 307,
+rather than the reverse. The default (`auto-trailing-slash`) serves directory-style output at
+the *slashed* URL, which meant every canonical tag and every internal link on the site pointed
+at a URL that redirected. Change it only alongside the four other places listed under
+[One URL per page](#one-url-per-page).
 
 ### Continuous deployment
 
@@ -193,4 +245,7 @@ included. That toggle lives in the zone settings, not in this repo.
   system preference and for an explicitly pinned dark theme.
 - Sitemap `lastmod` is read from post frontmatter at config time, because integrations are
   configured before content collections are available. Pages with no known modification date
-  are left without one — a wrong `lastmod` is worse than none.
+  are left without one — a wrong `lastmod` is worse than none. `/about`, `/work` and
+  `/projects` are the three, by design.
+- Prefetch is `defaultStrategy: 'hover'`, not `'viewport'`. On `/writing` the viewport
+  strategy would fetch all 21 posts as they scroll into view.

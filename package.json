@@ -8,12 +8,14 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "verify": "node scripts/verify-seo.mjs dist",
     "preview": "astro preview",
     "astro": "astro",
     "deploy": "astro build && wrangler deploy",
     "cf-preview": "astro build && wrangler dev"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.6.0",
     "astro": "^5.16.0"
   },

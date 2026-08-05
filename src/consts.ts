@@ -15,6 +15,15 @@ export const SITE = {
   locale: 'en',
 } as const;
 
+/**
+ * Browser-UI colour, matched to `--paper-light` / `--paper-dark` in global.css
+ * (converted from the OKLCH tokens defined there). Change both together.
+ */
+export const THEME_COLOR = {
+  light: '#fdfbf7',
+  dark: '#0d1116',
+} as const;
+
 export const NAV = [
   { href: '/writing', label: 'writing' },
   { href: '/work', label: 'work' },

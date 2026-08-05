@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE } from '../../consts';
 
 export const getStaticPaths = (async () => {
   const posts = await getCollection('writing', ({ data }) => !data.draft);
@@ -22,6 +23,12 @@ const readingTime = remarkPluginFrontmatter?.minutesRead;
     updated: post.data.updated,
     tags: post.data.tags,
   }}
+  keywords={post.data.tags}
+  breadcrumbs={[
+    { name: 'Home', item: SITE.url },
+    { name: 'Writing', item: `${SITE.url}/writing` },
+    { name: post.data.title },
+  ]}
 >
   <article>
     <header class="post-head">

@@ -1,23 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, SOCIAL, PERSON } from '../consts';
-
-// This is the page that is *about* the person, which is a different claim from the
-// other pages merely carrying his details. ProfilePage says so explicitly, which is
-// what search engines look for when deciding which URL represents an entity.
-const profileSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfilePage',
-  url: `${SITE.url}/about`,
-  name: `About ${SITE.author}`,
-  mainEntity: PERSON,
-};
+import { SITE, SOCIAL } from '../consts';
 ---
 
+<!-- `profile` marks this URL as the page that is *about* the person, rather than
+     one that merely carries his details — that is what search engines look for
+     when deciding which single URL represents an entity. -->
 <BaseLayout
   title="About"
   description="Yudha Bhakti Nugraha — engineer in Jakarta, Indonesia. Embedded systems, cloud platforms, applied AI, and the seam between them."
-  schema={profileSchema}
+  profile
+  breadcrumbs={[{ name: 'Home', item: SITE.url }, { name: 'About' }]}
 >
   <section class="hero">
     <h1>About</h1>

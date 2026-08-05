@@ -42,6 +42,12 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # Blocks the deploy on SEO regressions — canonical/sitemap disagreement,
+      # broken internal links, duplicate metadata. Runs on pull requests too,
+      # so a bad change is caught before it is merged.
+      - name: Verify SEO
+        run: pnpm verify
+
       # Pull requests build only — they must never deploy, since a fork PR
       # would otherwise be able to publish to the live domain.
       - name: Deploy to Cloudflare Workers
