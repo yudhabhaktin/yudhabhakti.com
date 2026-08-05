@@ -1,4 +1,4 @@
-import { SITE, PERSON, PERSON_ID } from '../consts';
+import { SITE, PERSON, PERSON_ID, CREATED_WORKS } from '../consts';
 
 /**
  * JSON-LD builders.
@@ -40,6 +40,14 @@ export interface SchemaInput {
   collection?: { name: string; url: string }[];
   /** Marks this URL as *the* page representing the person entity. */
   profile?: boolean;
+  /**
+   * Emit the externally-credited work in `CREATED_WORKS`, each pointing back at
+   * `#person` as its creator. Opt-in rather than global: the claim belongs on the
+   * pages that also state it in prose, and repeating it on 27 pages that do not
+   * mention it is the kind of markup-without-content mismatch that gets a whole
+   * graph discounted.
+   */
+  works?: boolean;
 }
 
 const website: Node = {
@@ -71,7 +79,7 @@ const breadcrumbList = (crumbs: Breadcrumb[]): Node => ({
  * `JSON.stringify`-ed into a single ld+json script tag.
  */
 export function buildSchema(input: SchemaInput) {
-  const { canonical, name, description, image, breadcrumbs, article, collection, profile } =
+  const { canonical, name, description, image, breadcrumbs, article, collection, profile, works } =
     input;
 
   const pageId = `${canonical}#webpage`;
@@ -133,6 +141,8 @@ export function buildSchema(input: SchemaInput) {
       ...(image ? { image } : {}),
     });
   }
+
+  if (works) graph.push(...CREATED_WORKS.map((work) => ({ ...work })));
 
   if (breadcrumbs?.length) graph.push(breadcrumbList(breadcrumbs));
 

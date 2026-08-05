@@ -25,6 +25,8 @@ export interface Props {
   collection?: { name: string; url: string }[];
   /** Marks this URL as the page representing the person entity. */
   profile?: boolean;
+  /** Emit the externally-credited work, attributed to the person entity. */
+  works?: boolean;
   breadcrumbs?: Breadcrumb[];
 }
 
@@ -37,6 +39,7 @@ const {
   article,
   collection,
   profile,
+  works,
   breadcrumbs,
 } = Astro.props;
 
@@ -56,6 +59,7 @@ const schema = buildSchema({
   article,
   collection,
   profile,
+  works,
   breadcrumbs,
 });
 

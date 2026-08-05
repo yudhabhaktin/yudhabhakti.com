@@ -23,6 +23,18 @@ const projects = [
     tags: ['Mentoring', 'Curriculum', 'Community'],
     links: [],
   },
+  // Co-credited with Kris on the source listing; RF100 later republished it.
+  // Paired with the Dataset node in CREATED_WORKS — keep the two in step.
+  {
+    name: 'RF100 — vehicles dataset',
+    year: '2023',
+    blurb:
+      'An open vehicle object-detection dataset, selected into RF100 (Roboflow 100) — an Intel-sponsored benchmark built to measure how well detection models generalise beyond the domains they were trained on. Published CC BY 4.0.',
+    tags: ['Computer vision', 'Object detection', 'Open data'],
+    links: [
+      { href: 'https://universe.roboflow.com/roboflow-100/vehicles-q0x2v', label: 'Dataset' },
+    ],
+  },
   {
     name: 'UGMSat-1 Nanosatellite',
     year: '2017 — 2018',
@@ -61,7 +73,8 @@ const smaller = [
 
 <BaseLayout
   title="Projects"
-  description="Things I have built — a local business platform in East Java, a university nanosatellite, a radiation portal monitor, and a dancing robot."
+  description="Things I have built — a local business platform in East Java, an open vehicle detection dataset in the RF100 benchmark, a university nanosatellite, a radiation portal monitor, and a dancing robot."
+  works
   breadcrumbs={[{ name: 'Home', item: SITE.url }, { name: 'Projects' }]}
 >
   <section class="hero">
