@@ -12,8 +12,9 @@ routine. It sounds whimsical. It is one of the more unforgiving problems a stude
 take on, because a dancing robot has to do the hardest thing in bipedal robotics — shift its
 weight repeatedly, on purpose, in time with music — while looking effortless.
 
-Our team took third place nationally and Best Design. I want to write about the second one,
-because it taught me more.
+Our team took third place nationally and Best Design with a robot called Al-Fan, in the year
+Gadjah Mada Robotic Team took the overall national title. I want to write about the design
+award, because it taught me more.
 
 ## A dance routine is a scheduling problem with consequences
 
@@ -62,10 +63,6 @@ the machine had been designed by people who assumed it would need fixing.
 That is the whole lesson. **Maintainability is a design property you can see from the
 outside, and people who evaluate systems for a living can tell within about thirty
 seconds.** A judge picking up your robot is doing code review with their hands.
-
-<!-- TODO(yudha): if there is a photo of the robot, the team, or the pit, add it here.
-     Also worth naming your teammates — team competitions are not solo achievements and
-     it reads well that you know that. -->
 
 ## What transferred
 

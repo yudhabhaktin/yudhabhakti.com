@@ -70,10 +70,6 @@ answer.
 and I reached for them out of habit. Those are exactly the problems that grow people. Handing
 over the thing you most want to do yourself is the tax on the job.
 
-<!-- TODO(yudha): a concrete moment would anchor this — a specific decision you got wrong
-     and what it cost, or a specific handover that went better than you expected. Keep it
-     free of employer specifics, but the shape of a real story would lift this post. -->
-
 ## Would I go back?
 
 No, but I understand people who do.

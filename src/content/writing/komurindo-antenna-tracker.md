@@ -7,11 +7,6 @@ published: 2015-09-20
 tags: ['embedded', 'competition', 'rf', 'campus']
 ---
 
-<!-- TODO(yudha): confirm the year. I dated this 2015 because that fits your degree
-     timeline, but check it against your own records before publishing. If you placed,
-     say so here — search turned up a 1st place in Muatan Roket at KOMURINDO/KOMBAT 2015
-     under a similar name and I did not want to claim it for you incorrectly. -->
-
 KOMURINDO is the Indonesian student rocket payload competition. Teams build a payload,
 it goes up on a rocket, and you have a few minutes to prove your electronics did
 something useful on the way down.
@@ -19,6 +14,11 @@ something useful on the way down.
 Our team worked on the Antenna Tracker System for a ballistic payload. Someone else's job
 was to survive the launch. Ours was to make sure that when it started talking, we were
 listening.
+
+We took first place in the rocket payload division at Pameungpeuk, Garut in August 2015 —
+the Gadjah Mada Aerospace Team, competing as Gathotkaca UGM. If you go looking for the
+results, the published roster spells me "Yudha Bakti Nugroho", which is not quite my name.
+The typo has followed me around ever since.
 
 ## The problem, stated simply
 
@@ -86,9 +86,6 @@ flight.
 That is the lesson I still carry. Not "test more." Specifically: **your test conditions
 encode assumptions you did not know you were making**, and the ones that matter are the ones
 you never varied.
-
-<!-- TODO(yudha): a photo of the ground station rig, or the team at the launch site,
-     belongs here. This post is the best candidate on the site for one. -->
 
 ## Why I still think about it
 

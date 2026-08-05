@@ -62,10 +62,6 @@ technical lead. I got more out of it professionally than any course I have taken
 often not the most senior person available. They are the person who remembers being stuck on
 this, recently enough to reconstruct why it was confusing. Expertise creates distance.
 
-<!-- TODO(yudha): a specific student story here would make this post much stronger —
-     someone who was stuck on something and got through it. Keep it anonymous, but the
-     concrete beats the general every time. -->
-
 ## The bit I still think about
 
 Somewhere in the middle of the program I noticed I had stopped answering questions directly

@@ -11,7 +11,7 @@ const projects = [
       'A multi-vertical local platform for a business in Banyuwangi, East Java — self-service photo studio, on-location photo and video, and F&B under one brand, with shared identity, loyalty, and booking. A Go monolith on a single box, plus a kiosk agent that keeps working when the network does not.',
     tags: ['Go', 'SQLite', 'TypeScript', 'Terraform', 'Ansible', 'Cloudflare Tunnel'],
     links: [
-      { href: 'https://github.com/bhaktiyudha/bykami', label: 'Source' },
+      { href: 'https://github.com/yudhabhaktin/bykami', label: 'Source' },
       { href: '/writing/building-bykami', label: 'Write-up' },
     ],
   },
@@ -49,15 +49,20 @@ const projects = [
     name: 'Radiation Portal Monitor "Merah Putih"',
     year: '2018',
     blurb:
-      'Embedded detection system built for BATAN, Indonesia\'s National Nuclear Energy Agency.',
+      'Embedded detection system built during an internship at BATAN, Indonesia\'s National Nuclear Energy Agency.',
     tags: ['Embedded', 'Instrumentation'],
-    links: [],
+    links: [
+      {
+        href: 'https://mediaindonesia.com/humaniora/204083/kini-ri-punya-alat-deteksi-radioaktif',
+        label: 'Press',
+      },
+    ],
   },
   {
     name: 'Kontes Robot Indonesia — Humanoid Robot Dance',
     year: '2017',
     blurb:
-      '3rd place and Best Design (team) at the national robotics competition run by the Ministry of Research and Technology. A robot that falls over mid-routine gives you very direct feedback.',
+      '3rd place and Best Design (team) in the dance division at Kontes Robot Indonesia 2017, with a robot called Al-Fan — part of the year Gadjah Mada Robotic Team took the national overall title. A robot that falls over mid-routine gives you very direct feedback.',
     tags: ['Robotics', 'Controls'],
     links: [],
   },
@@ -120,7 +125,7 @@ const smaller = [
       {
         smaller.map((s) => (
           <li class="entry">
-            <a class="entry__link" href={`https://github.com/bhaktiyudha/${s.name}`}>
+            <a class="entry__link" href={`https://github.com/yudhabhaktin/${s.name}`}>
               <span class="entry__date">{s.lang}</span>
               <span class="entry__title">{s.name}</span>
               <span class="entry__desc">{s.desc}</span>
@@ -129,6 +134,6 @@ const smaller = [
         ))
       }
     </ul>
-    <a class="more" href="https://github.com/bhaktiyudha">All repositories</a>
+    <a class="more" href="https://github.com/yudhabhaktin">All repositories</a>
   </section>
 </BaseLayout>

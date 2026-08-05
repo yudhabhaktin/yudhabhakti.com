@@ -75,7 +75,7 @@ for (const id of targets) {
 console.log('');
 if (ok) {
   console.log('This token can deploy. Set it as the CI secret:');
-  console.log('  gh secret set CLOUDFLARE_API_TOKEN --repo bhaktiyudha/yudhabhakti.com');
+  console.log('  gh secret set CLOUDFLARE_API_TOKEN --repo yudhabhaktin/yudhabhakti.com');
 } else if (ids.length && wantAccount && !ids.includes(wantAccount)) {
   console.log('DIAGNOSIS: the token is scoped to a different account.');
   console.log(`  CLOUDFLARE_ACCOUNT_ID is ${wantAccount}, but the token only sees:`);

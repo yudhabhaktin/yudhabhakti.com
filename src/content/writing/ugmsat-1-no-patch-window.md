@@ -67,10 +67,6 @@ you *could* fix it quickly. Most production incidents I have been near were not 
 the absence of a fix. They were caused by a system confidently doing the wrong thing for
 hours before anyone noticed.
 
-<!-- TODO(yudha): worth adding what your specific contribution was — which subsystem,
-     which board, what you personally wrote. Right now this reads as a reflection on the
-     project rather than on your work in it, and the specifics would make it yours. -->
-
 ## An honest caveat
 
 I was an undergraduate on a university project. I do not want to overclaim: this was not a

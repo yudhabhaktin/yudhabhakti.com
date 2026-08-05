@@ -70,10 +70,6 @@ supposed to do about it, determines whether the system works. I have watched wel
 detection systems fail because the alarm gave someone no actionable next step. The
 instrument was fine. The loop through the human was broken.
 
-<!-- TODO(yudha): add what you specifically built here — the embedded/firmware side,
-     which part of the acquisition or processing chain was yours. Keep it at the level
-     of the work, not the system's capabilities. -->
-
 ## Where this comes back
 
 Every threshold I have set since has felt like the same question wearing different clothes.

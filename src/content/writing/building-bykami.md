@@ -7,7 +7,7 @@ published: 2026-08-01
 tags: ['go', 'architecture', 'side-project', 'infrastructure']
 ---
 
-I have been building [bykami](https://github.com/bhaktiyudha/bykami), a platform for a small
+I have been building [bykami](https://github.com/yudhabhaktin/bykami), a platform for a small
 multi-vertical business in Banyuwangi, East Java. Three lines so far: a self-service photo
 studio, on-location photo and video, and a food and beverage spot. Different services, one
 brand, one identity, one loyalty scheme.
@@ -17,9 +17,6 @@ clarifying. When there is no architecture review to hide behind, you find out wh
 actually believe.
 
 Mostly I believe in boring.
-
-<!-- TODO(yudha): a photo of the actual booth or the kiosk screen would do more for this
-     post than any diagram. Drop it here. -->
 
 ## The shape of it
 
@@ -114,9 +111,6 @@ The long-term idea is a franchise: outlets running `booth by KAMI`, rather than 
 photobooth software to other operators. That is a different product with different
 constraints, and I am trying not to design for it yet. Phase one is live. Phase two is the
 API monolith above. Anything past that is speculation with a git history.
-
-<!-- TODO(yudha): update this when phase 2 ships, and correct anything I got wrong about
-     the business lines or the roadmap — I wrote this from the repo. -->
 
 ## The honest summary
 

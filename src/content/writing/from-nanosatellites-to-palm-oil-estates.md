@@ -33,9 +33,6 @@ Kontes Robot Indonesia with a dancing humanoid. Less consequential. Much more fu
 the same discipline: a robot that falls over during its routine has given you extremely
 direct feedback.
 
-<!-- TODO(yudha): if you have a photo of UGMSat-1, the portal monitor, or the robot,
-     this is the spot for it. One image here would carry a lot. -->
-
 ## Then the world got bigger and messier
 
 Industrial IoT at Evomo — a venture incubated inside Telkom — was the first time I had to
