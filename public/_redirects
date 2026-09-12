@@ -1,0 +1,3 @@
+# The post went out under a different slug and was renamed the same day. Keep the
+# old URL working rather than letting it 404 for anyone who already has the link.
+/writing/late-to-agents-one-evening /writing/adding-an-agent-in-one-evening 301

@@ -1,8 +1,9 @@
 ---
-title: I was late to agents, and it cost me one evening
+title: Adding an agent in one evening — the groundwork was already there
 description: >-
   I wired an agent into this machine on a Saturday and now I talk to it from my phone. The
-  part worth writing down is why the implementation was that small.
+  implementation was small because of work I had already done for other reasons, and that is
+  the part worth copying.
 published: 2026-09-13
 tags: ['ai', 'tooling', 'infrastructure', 'workflow', 'side-project']
 draft: false
@@ -107,22 +108,21 @@ triggers, a different harness around them. **A procedure that only works inside 
 prompt. A procedure that survives a change of tool is a harness**, and the second kind is
 worth far more than one evening.
 
-## On being late
+## Why it is worth starting now
 
-I have had a coding agent in daily use since last year, so I was not late to the tools, and I
-have written elsewhere about what they change. What I did not do for all that time was treat
-the agent as something I operate rather than something I invoke. In an editor it waits for me.
-As a service it works while I am not there, which was always the point and took me a year to
-act on.
+There are two ways to hold an agent. The first is a thing I invoke: I open an editor, ask for
+something, and close the window. The second is a thing I operate: it has a home, a schedule
+and a way to reach me when I am not at a desk. I used the first shape for a year, which taught
+me a great deal about the tools and nothing about the second. The second is the one that
+changed how a day works, and moving between them needed no new model and no bigger machine.
 
-So the honest version of "it is never too late" is narrower than it sounds. It was never too
-late here because the work that makes an agent useful had already been done, accidentally, for
-other reasons. Starting late inside a system that is specified, checked and dispatched is one
-evening. Starting late inside a system that lives in one person's head is not an
-implementation at all — it is a rewrite with a chatbot attached, and the chatbot is not the
-expensive part.
-<!-- TODO(yudha): what did the delay actually cost you? Name one concrete thing, e.g. a
-     class of task that sat undone because it needed you at the desk. -->
+That distinction is also the practical answer to where to start. When a system is specified,
+checked and dispatched, adding an agent is one evening, because the harness already exists.
+When a system lives in one person's head, no agent saves you the work of writing it down —
+that work was always the work. **The groundwork is not a prerequisite you do for the agent. It
+is the thing you wanted anyway**, and an agent is what makes the payoff visible enough to
+finish it.
+<!-- TODO(yudha): one class of task that used to wait for a desk and now does not. -->
 
 ## What changed, and what I do not know yet
 
