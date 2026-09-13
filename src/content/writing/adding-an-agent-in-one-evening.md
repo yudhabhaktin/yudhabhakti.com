@@ -23,25 +23,57 @@ existed.
 
 The shape of it is one machine and one channel:
 
-```
-  phone ──Telegram──┐
-                    v
-     gateway on the Mac
-        (launchd)
-                    |
-          ┌─────────┴─────────┐
-          v                   v
-       Hermes                Pi
-          └─────────┬─────────┘
-                    v
-                rtk proxy
-                    |
-                    v
-        checks · git · builds
-                    |
-                    v
-      CI (dispatch-only)
-```
+<figure class="setup-diagram">
+  <svg viewBox="0 0 420 512" role="img" aria-labelledby="setup-title setup-desc" style="display:block;width:100%;max-width:26rem;height:auto;margin-inline:auto">
+    <title id="setup-title">The setup, end to end</title>
+    <desc id="setup-desc">A phone reaches a gateway running under launchd on the Mac. The gateway drives two agents, Hermes and Pi. Their shell commands pass through an rtk proxy before they reach checks, git and builds on the machine, and the CI workflows are dispatched rather than triggered by hand.</desc>
+    <style>.setup-diagram .dg-box,.setup-diagram .dg-agent{fill:var(--surface);stroke:var(--rule);stroke-width:1}.setup-diagram .dg-edge{fill:none;stroke:var(--faint);stroke-width:1.25}.setup-diagram .dg-boundary{fill:none;stroke:var(--rule);stroke-width:1;stroke-dasharray:3 4}.setup-diagram .dg-title{fill:var(--ink);font-family:var(--font-sans);font-size:16px;font-weight:600;text-anchor:middle}.setup-diagram .dg-sub{fill:var(--muted);font-family:var(--font-sans);font-size:13px;text-anchor:middle}.setup-diagram .dg-note{fill:var(--muted);font-family:var(--font-sans);font-size:12.5px}.setup-diagram .dg-cap{fill:var(--paper)}</style>
+    <rect class="dg-boundary" x="30" y="72" width="360" height="424" rx="10"/>
+    <rect class="dg-cap" x="52" y="64" width="56" height="16"/>
+    <text class="dg-note" x="80" y="76" text-anchor="middle">the Mac</text>
+    <rect class="dg-box" x="90" y="14" width="240" height="44" rx="8"/>
+    <text class="dg-title" x="210" y="34">phone</text>
+    <text class="dg-sub" x="210" y="50">Telegram</text>
+    <path class="dg-edge" d="M210 58 L210 86"/>
+    <path class="dg-edge" d="M206 82 L210 88 L214 82"/>
+    <rect class="dg-box" x="90" y="88" width="240" height="44" rx="8"/>
+    <text class="dg-title" x="210" y="108">gateway on the Mac</text>
+    <text class="dg-sub" x="210" y="124">launchd, restarts on boot</text>
+    <path class="dg-edge" d="M210 132 L210 160"/>
+    <path class="dg-edge" d="M120 160 L300 160"/>
+    <path class="dg-edge" d="M120 160 L120 178"/>
+    <path class="dg-edge" d="M116 174 L120 180 L124 174"/>
+    <path class="dg-edge" d="M300 160 L300 178"/>
+    <path class="dg-edge" d="M296 174 L300 180 L304 174"/>
+    <rect class="dg-agent" x="55" y="180" width="130" height="52" rx="8"/>
+    <text class="dg-title" x="120" y="201">Hermes</text>
+    <text class="dg-sub" x="120" y="217">a service</text>
+    <text class="dg-sub" x="120" y="229">keeps memory</text>
+    <rect class="dg-agent" x="235" y="180" width="130" height="52" rx="8"/>
+    <text class="dg-title" x="300" y="201">Pi</text>
+    <text class="dg-sub" x="300" y="217">a coding agent</text>
+    <text class="dg-sub" x="300" y="229">same tools</text>
+    <path class="dg-edge" d="M120 232 L120 260"/>
+    <path class="dg-edge" d="M300 232 L300 260"/>
+    <path class="dg-edge" d="M120 260 L300 260"/>
+    <path class="dg-edge" d="M210 260 L210 278"/>
+    <path class="dg-edge" d="M206 274 L210 280 L214 274"/>
+    <rect class="dg-box" x="90" y="280" width="240" height="44" rx="8"/>
+    <text class="dg-title" x="210" y="300">rtk proxy</text>
+    <text class="dg-sub" x="210" y="316">rewrites commands, trims output</text>
+    <path class="dg-edge" d="M210 324 L210 352"/>
+    <path class="dg-edge" d="M206 348 L210 354 L214 348"/>
+    <rect class="dg-box" x="90" y="354" width="240" height="44" rx="8"/>
+    <text class="dg-title" x="210" y="374">checks · git · builds</text>
+    <text class="dg-sub" x="210" y="390">exit codes, not opinions</text>
+    <path class="dg-edge" d="M210 398 L210 426"/>
+    <path class="dg-edge" d="M206 422 L210 428 L214 422"/>
+    <rect class="dg-box" x="90" y="428" width="240" height="44" rx="8"/>
+    <text class="dg-title" x="210" y="448">CI</text>
+    <text class="dg-sub" x="210" y="464">dispatch-only</text>
+  </svg>
+  <figcaption>The whole setup is one machine and one channel. Everything inside the dashed line runs on the Mac; the phone is the only client.</figcaption>
+</figure>
 
 Four pieces make that up.
 
