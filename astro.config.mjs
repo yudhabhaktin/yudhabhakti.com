@@ -2,6 +2,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 
@@ -45,6 +46,9 @@ export default defineConfig({
   // navigation feels instant without preloading 23 posts on the listing page.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   integrations: [
+    // The RAG walkthrough is embedded in its own post, so the post is .mdx and the
+    // island is placed in the body rather than bolted on by a template.
+    mdx(),
     // The interactive bits are React islands and nothing else: every page still
     // ships as static HTML, and a visitor with JS off gets the written version.
     react(),

@@ -8,6 +8,8 @@ tags: ['rag', 'llm', 'design', 'web', 'applied-ai']
 draft: false
 ---
 
+import RagExplainer from '../../components/rag/RagExplainer.tsx';
+
 Retrieval pipelines are usually explained as one wide diagram. Boxes left to right, an arrow
 between each, a sidebar of steps down the left. It is a good shape for a conference slide and
 a bad shape for the device most people will open it on.
@@ -17,6 +19,16 @@ watch the stage fill in. So I built one for this site.
 
 The pipeline was the easy half — making the diagram legible on a phone took the time — which is
 where I read everything, and probably where you are reading this.
+
+## The walkthrough
+
+Pick a step or press play. The sections after it explain the decisions behind the drawing,
+including the ones that turned out to be about the drawing rather than the pipeline.
+
+{/* client:load, not client:visible: the SSR default viewBox is a placeholder, and until the
+    island hydrates and measures its own box the drawing is scaled to about a third of its
+    type size. Hydrate immediately so the first frame is already correct. */}
+<RagExplainer client:load />
 
 ## The diagram
 
@@ -46,8 +58,9 @@ the narration changes as the scene fills in rather than sitting static next to i
 
 You can press play and let it run through the whole thing, step by step. You can scrub. You
 can deep-link a single step — `#s=6` opens storage and indexes. The arrow keys work too, if you
-are on a keyboard. Under the diagram the same pipeline is written out in prose — which is what a reader without JavaScript gets and what I would quote if someone asked
-me what the pipeline actually does.
+are on a keyboard. On [its own page](/rag) the same pipeline is written out in prose under the diagram, which is
+what a reader without JavaScript gets and what I would quote if someone asked me what the
+pipeline actually does.
 
 ## How it is put together
 
@@ -115,4 +128,5 @@ scrub — comes from
 by Ardya Dipta Nandaviri. It goes deeper into the pipeline itself than this page does. Credit for the idea is his; this implementation, its scenes, copy and
 player are mine, and the two differ in the way the drawing is laid out.
 
-You can [open the walkthrough](/rag) and press play.
+The walkthrough also stands alone at [/rag](/rag), full width, if you want to link to it
+without the rest of this post.
