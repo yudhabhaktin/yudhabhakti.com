@@ -82,7 +82,7 @@ backup nobody has restored is a belief. I know this, I have said it to other eng
 review, and I have still not scheduled the afternoon. Writing that sentence in public is,
 I hope, the forcing function.
 
-## Where AWS would genuinely earn it
+## Where AWS would earn it
 
 The long-term shape of bykami is a franchise — outlets running `booth by KAMI` rather than
 photobooth software sold to other operators. That changes the problem in a way scale numbers
@@ -102,7 +102,7 @@ The design I would reach for then, and the reason for each piece:
   without hedging.
 - **Aurora Serverless v2**, not because of load but because a shared multi-tenant database
   is a thing I want someone else to be backing up, patching, and failing over. Cross-outlet
-  reporting is the query pattern SQLite-per-outlet makes genuinely painful.
+  reporting is the query pattern SQLite-per-outlet makes painful.
 - **S3 plus CloudFront for the photos.** This is the strongest case on the list and it is
   true *today*, not at five outlets. Photos are large, immutable, written once, read a few
   times in the following week, and then almost never. That access curve is precisely what

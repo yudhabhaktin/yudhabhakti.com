@@ -61,7 +61,7 @@ I do not think the answer is process. Requiring people to attest that they under
 diffs produces attestation, not understanding. What has worked on my team is cultural and
 smaller: we ask people to explain changes conversationally, as the ordinary way we discuss
 work. Fluency shows up quickly, and so does its absence. That was true before these tools and
-is just more load-bearing now.
+carries more of the weight now.
 
 ## What I think this does to how teams are shaped
 

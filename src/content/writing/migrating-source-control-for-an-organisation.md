@@ -86,13 +86,13 @@ What worked:
 
 - **Say why, more than once.** Not the executive rationale — the version that answers "what
   does this get *me*."
-- **Migrate teams, not repositories.** A team whose repos are split across platforms is a
+- **Migrate teams, not repositories:** a team whose repos are split across platforms is a
   team that is blocked. Move a team's entire world at once so they only pay the context
   switch once.
 - **Have an obvious place to ask for help**, staffed by someone who will answer quickly
   during the cutover window. The cost of an unanswered question during a migration is a
   developer inventing their own workaround, which you will find six months later.
-- **Write the runbook as you go.** Team five should have a much easier time than team one,
+- **Write the runbook as you go:** team five should have a much easier time than team one,
   and the only mechanism that makes that true is writing down what broke.
 
 ## The thing I would do differently

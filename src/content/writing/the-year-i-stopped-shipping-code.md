@@ -29,7 +29,7 @@ delegated, because finishing them felt like proof. It was proof. It was also me 
 bottleneck on four things while doing a fifth thing that someone else could have done better
 with more context.
 
-The genuinely uncomfortable realisation was that **on my best days as a lead I write no code
+The uncomfortable realisation was that **on my best days as a lead I write no code
 at all, and I have to be okay with that.** Not because coding is beneath the role — I still
 review, prototype, and get hands-on with production problems — but because the highest
 leverage available to me is usually a conversation, not a commit.

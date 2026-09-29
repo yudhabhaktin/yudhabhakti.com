@@ -97,7 +97,7 @@ Practical consequences:
 
 That last point is the general one. **Make every message independently meaningful.** Any
 protocol where the receiver reconstructs state by accumulating messages will eventually be
-wrong over a lossy link, and it will be wrong quietly.
+wrong over a lossy link, and it will be wrong silently.
 
 ## So what is it actually for
 

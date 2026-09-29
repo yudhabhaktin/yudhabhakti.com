@@ -15,7 +15,7 @@ if you are trying to decide how to work.
 Short version: the speed claims are broadly real, and they matter less than I expected,
 because the constraint moved rather than disappeared.
 
-## Where it is genuinely strong
+## Where it is strong
 
 **Unfamiliar code.** This is the use I did not anticipate and now rely on most. Dropping into
 a repository I did not write and asking what a subsystem does — and then asking follow-up
@@ -39,11 +39,11 @@ between "I should automate this" and "I have automated this" narrowed considerab
 ## Where it is not
 
 **Anything requiring context that lives in people.** Why the finance team needs the cutoff at
-that hour. Which vendor integration is politically load-bearing. Why a previous engineer made
+that hour. Which vendor integration carries political weight. Why a previous engineer made
 a choice that looks wrong and is not. None of that is in the repository, so none of it is
 available, and confident output built on a missing constraint is worse than no output.
 
-**Genuinely novel domain logic.** When the hard part is deciding what the system should do,
+**Novel domain logic.** When the hard part is deciding what the system should do,
 generating an implementation of a decision I have not made is not help.
 
 **Judging its own confidence.** It does not reliably distinguish "this is a well-trodden
@@ -72,7 +72,7 @@ because the first draft optimised for looking complete.
 
 ## What I changed about how I work
 
-**Smaller units.** Long autonomous runs produce diffs too large to review honestly, and an
+**Smaller units.** Long autonomous runs produce diffs too large to review properly, and an
 unreviewed large diff is a liability regardless of who wrote it. Short cycles with a look at
 each one.
 

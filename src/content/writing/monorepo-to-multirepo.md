@@ -48,7 +48,7 @@ is a permission boundary that every tool already understands, including the ones
 not adopted yet.
 
 **CI blast radius.** In a monorepo, a change anywhere can trigger builds everywhere unless
-your affected-target detection is genuinely good. Ours was adequate rather than good, and
+your affected-target detection is good. Ours was adequate rather than good, and
 the failure mode is corrosive: pipelines get slower, people stop reading CI failures because
 half of them are unrelated, and then a real failure goes unnoticed for a day.
 

@@ -91,7 +91,7 @@ A design document is a communication artefact, and its audience is usually mixed
 who will build it, and stakeholders who will fund or depend on it. Those two groups need
 different things, and the instinct is to write two documents.
 
-What worked better was one document with a genuinely self-contained first page: the problem,
+What worked better was one document with a self-contained first page: the problem,
 the proposal in a paragraph, what changes for whom, and the risks. Everything below is for
 people who need it. A stakeholder who only reads page one should come away with an accurate
 picture, not a marketing summary.

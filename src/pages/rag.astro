@@ -84,9 +84,9 @@ const description =
         The page is an Astro island: the surrounding site stays static HTML, and the walkthrough
         hydrates as one React component. React owns the shell — steps, phases, captions,
         controls — while the motion runs on the Web Animations API. Each shape in a scene
-        carries the moment it should appear and how long it takes; playback writes a single
-        millisecond value onto those paused animations, so a frame costs no React work and a
-        phone can scrub without dropping the diagram.
+        carries the moment it should appear and how long it takes, and the animations
+        themselves belong to the browser: they run on the compositor while the page's own
+        loop paints only the counter and the progress meter.
       </p>
       <p>
         Every scene measures itself from the box it is handed, and every colour is one of this

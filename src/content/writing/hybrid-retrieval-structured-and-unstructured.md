@@ -70,10 +70,10 @@ Things worth being strict about:
 - **Read-only credentials.** Not "the prompt says not to write." A database role that cannot
   write. The prompt is not a security control — it is a suggestion to a system that is
   designed to be agreeable.
-- **A constrained surface.** Views over base tables, not the whole schema. This helps
+- **A constrained surface:** views over base tables, not the whole schema. This helps
   correctness as much as safety; a model reasons better about six well-named views than
   sixty tables with a decade of naming drift.
-- **Query limits.** Timeouts and row caps, because an unbounded generated join will find
+- **Query limits:** timeouts and row caps, because an unbounded generated join will find
   its way to production eventually.
 - **Log the generated SQL.** When someone reports a wrong number, the query is the only
   artefact that tells you what actually happened.
@@ -115,7 +115,7 @@ chunking, retrieval, or routing runs against that file before it ships.
 
 It is unglamorous, it needs maintaining, and it is the only thing that reliably caught
 regressions for me. Vibes-based evaluation works right up until the day you change the
-chunker and quietly break every question about one document type.
+chunker and silently break every question about one document type.
 
 ## What I would tell someone starting
 

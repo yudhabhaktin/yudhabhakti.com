@@ -67,7 +67,7 @@ latency, and something external deciding how much latency you are allowed.
 
 **The alarm is a user interface.** What the operator sees, how fast, and what they are
 supposed to do about it, determines whether the system works. I have watched well-built
-detection systems fail because the alarm gave someone no actionable next step. The
+detection systems fail because the alarm gave someone nothing to do next. The
 instrument was fine. The loop through the human was broken.
 
 ## Where this comes back

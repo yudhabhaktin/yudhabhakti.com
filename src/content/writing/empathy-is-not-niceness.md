@@ -56,7 +56,7 @@ deadlines might be overloaded, blocked on something they are embarrassed to rais
 disengaged, or dealing with something outside work entirely. These need different responses,
 and picking one without checking is not empathy, it is a guess wearing a costume.
 
-## Where it is genuinely hard
+## Where it is hard
 
 **Across a vendor boundary.** I have worked with several external delivery teams. The
 temptation is to treat them as a resource that either delivers or does not. But a vendor

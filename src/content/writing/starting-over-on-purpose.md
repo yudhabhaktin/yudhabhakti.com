@@ -104,7 +104,7 @@ I arrived with the standard engineer's model of a large company: it is slow, the
 overhead, and if people would get out of the way the work would go faster. Six months of
 sitting in those functions has made that view look mostly like ignorance.
 
-**The constraints are usually load-bearing.** Every approval step I found annoying existed
+**The constraints are rarely arbitrary.** Every approval step I found annoying existed
 because something went wrong once, and often the incident is on record if you ask. Some of
 them have outlived their reason and should go. But the default assumption that a process is
 stupid because you cannot immediately see its purpose is a very expensive assumption, and I

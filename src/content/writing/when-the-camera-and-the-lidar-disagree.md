@@ -64,7 +64,7 @@ directly, in the dark, in conditions where the camera is having a bad time. It i
 its own things: heavy rain and spray produce spurious returns, dark or wet surfaces return
 weakly, resolution falls off with distance, and it cannot read anything painted on a surface.
 
-Because the failure modes are close to independent, the combination is far more robust than
+Because the failure modes are close to independent, the combination is far more reliable than
 either — but only if you combine them in a way that *preserves* the independence. Blend the
 two into one averaged score and you have thrown away the only thing you bought.
 

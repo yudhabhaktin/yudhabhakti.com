@@ -1,9 +1,8 @@
 ---
 title: Drawing a RAG pipeline that survives a phone screen
 description: >-
-  A sort of step-through explainer of a retrieval pipeline, and the part that turned out to
-  be the work: making a wide landscape diagram legible on the device most people will open
-  it on.
+  A step-through explainer of a retrieval pipeline, and the part that turned out to be the
+  work: making a wide diagram legible on the phone most people will open it on.
 published: 2026-09-29
 tags: ['rag', 'llm', 'design', 'web', 'applied-ai']
 draft: false
@@ -75,12 +74,12 @@ animation someone did not ask for is a worse default than a still picture.
 
 ## The bugs a measurement finds and an eye does not
 
-I cannot see these screenshots, so I checked by measuring instead. For every step, at every
+I cannot see the rendered page while I work, so I checked by measuring instead. For every step, at every
 width I cared about, compare the bounding box of each text element against the stage
 box, and every pair of labels against each other. Anything outside the box is clipped — anything overlapping by more than a third of its area
 counts as a collision.
 
-It also forced a decision I had been avoiding. A stage 337&nbsp;px wide holds about fifteen
+Measuring also forced a decision I had been avoiding. A stage 337&nbsp;px wide holds about fifteen
 shapes before it stops being a diagram; the first scenes drew sixty of them. Cutting back to
 fewer boxes, bigger type, one idea per step, did more for how the thing feels than any timing
 curve. The measurement said so before anyone had to look at it.
@@ -91,17 +90,16 @@ because their spacing was derived from the panel height without a floor. And the
 in the last scene ran past the edge of the stage below about 320&nbsp;px. None of them would
 have been obvious one at a time; all of them were trivial once the check existed.
 
-It also caught a bug I would not have found by looking at all: the element animations were
+The same check caught a bug I would not have found by looking: the element animations were
 accumulating. React reuses the same SVG nodes when only the geometry changed, and each
 re-render added another animation with `fill: both` on top of the previous one. The picture
 looked fine. It was five animations deep on the same rectangle.
 
 ## What it is not
 
-The numbers in it are illustrative. A hundred thousand documents, 88,412 unique after
-dedupe, 768-dimension vectors, a 71/22/7 split between the text layer, OCR and a vision model.
-They are illustrative. Those are the shapes of the answer, not measurements from a corpus
-I processed. If you put
+The numbers in it are shapes, not measurements. A hundred thousand documents, 88,412 unique
+after dedupe, 768-dimension vectors, a 71/22/7 split between the text layer, OCR and a vision
+model: those are the shape of the answer, not a corpus I processed. If you put
 your own numbers in, they should come from your own pipeline; otherwise the diagram teaches a
 number that nobody can reproduce.
 
@@ -114,8 +112,7 @@ to be understood in a couple of minutes.
 The shape of the page — a step list beside an animated stage, phases inside a step, play and
 scrub — comes from
 ["Inside a 100,000-document RAG knowledge base"](https://ardyadipta.github.io/blog/rag-pipeline-explainer.html)
-by Ardya Dipta Nandaviri. That is a genuinely good walkthrough of the same pipeline and worth
-your time on its own. Credit for the idea is his; this implementation, its scenes, copy and
+by Ardya Dipta Nandaviri. It goes deeper into the pipeline itself than this page does. Credit for the idea is his; this implementation, its scenes, copy and
 player are mine, and the two differ in the way the drawing is laid out.
 
 You can [open the walkthrough](/rag) and press play.
