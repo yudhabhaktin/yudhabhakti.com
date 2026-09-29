@@ -5,3 +5,6 @@
 # chat, slides and replies, kept as redirects so there is one canonical page.
 /ragpipeline /rag 301
 /rag-pipeline /rag 301
+# The RAG post was retitled after publication, and the old slug said more about the
+# hook than the subject. Same treatment as the agent post above.
+/writing/drawing-a-rag-pipeline-that-survives-a-phone /writing/rag-pipeline 301

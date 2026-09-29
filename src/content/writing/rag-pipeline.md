@@ -1,8 +1,8 @@
 ---
-title: Drawing a RAG pipeline that survives a phone screen
+title: RAG Pipeline
 description: >-
-  A step-through explainer of a retrieval pipeline, and the part that turned out to be the
-  work: making a wide diagram legible on the phone most people will open it on.
+  The eight stages of a retrieval pipeline, animated: parsing, chunking, embedding, three
+  indexes, hybrid retrieval, reranking, and an answer that cites its sources.
 published: 2026-09-29
 tags: ['rag', 'llm', 'design', 'web', 'applied-ai']
 draft: false
@@ -18,7 +18,7 @@ watch the stage fill in. So I built one for this site.
 The pipeline was the easy half — making the diagram legible on a phone took the time — which is
 where I read everything, and probably where you are reading this.
 
-## The diagram was the problem, not the pipeline
+## The diagram
 
 Take a 16:9 stage and put it in a 390&nbsp;px-wide viewport and the arithmetic is brutal. The
 drawing scales to fit the width, so a 12&nbsp;px label is rendered at about 4.7&nbsp;px. The
@@ -72,7 +72,7 @@ so the diagram follows the light/dark toggle without a second palette to maintai
 `prefers-reduced-motion` renders the finished state with the play control hidden, because an
 animation someone did not ask for is a worse default than a still picture.
 
-## The bugs a measurement finds and an eye does not
+## Measuring instead of looking
 
 I cannot see the rendered page while I work, so I checked by measuring instead. For every step, at every
 width I cared about, compare the bounding box of each text element against the stage
