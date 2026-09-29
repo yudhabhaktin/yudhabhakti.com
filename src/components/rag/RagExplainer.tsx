@@ -6,12 +6,17 @@ import './rag.css';
 /**
  * The walkthrough island.
  *
- * React owns the shell — steps, phases, captions, controls — and the SVG *tree* is
- * declared once per step from the scene data. The motion is Web Animations: every
- * shape carries the moment it should appear (`data-at`) and how long it takes, and
- * one rAF loop keeps the whole step at `time` ms by writing `currentTime` onto the
- * paused animations. Scrubbing is therefore exact and playback never re-renders
- * React, which is what keeps it smooth on a phone.
+ * React owns the shell — steps, phases, captions, controls — and the SVG tree is
+ * declared once per step from the scene data. The motion is the browser's own Web
+ * Animations: every shape carries the moment it should appear (`data-at`) and how
+ * long it takes, and the animations run *natively* on the compositor.
+ *
+ * That last point is the whole trick. An earlier version kept every animation
+ * paused and wrote `currentTime` onto all of them from one rAF loop, which meant
+ * sixty-odd style recalcs per frame and visible stutter on a phone. Now the rAF
+ * loop only paints the progress meter, the counter text and the phase label; it
+ * never touches a shape. Pausing pauses the animations, scrubbing seeks them, and
+ * everything in between is the compositor's problem.
  */
 
 const FILL: Record<Fill, string> = {
@@ -34,12 +39,13 @@ const MARKERS = {
   rule: 'rag-arrow-rule',
 } as const;
 
-const EASE = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
+/** Calm by design: a long tail keeps arrivals from looking like a twitch. */
+const EASE = 'cubic-bezier(0.33, 1, 0.68, 1)';
 
 const KEYFRAMES: Record<Anim, Keyframe[]> = {
   fade: [{ opacity: '0' }, { opacity: '1' }],
-  pop: [{ opacity: '0', transform: 'scale(0.94)' }, { opacity: '1', transform: 'scale(1)' }],
-  rise: [{ opacity: '0', transform: 'translateY(7px)' }, { opacity: '1', transform: 'translateY(0)' }],
+  pop: [{ opacity: '0', transform: 'scale(0.97)' }, { opacity: '1', transform: 'scale(1)' }],
+  rise: [{ opacity: '0', transform: 'translateY(6px)' }, { opacity: '1', transform: 'translateY(0)' }],
   draw: [{ strokeDashoffset: '100' }, { strokeDashoffset: '0' }],
   growx: [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
   growy: [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }],
@@ -58,7 +64,7 @@ const fillOf = (token: Fill | undefined, fallback: Fill = 'ink') => FILL[token ?
 const markerFor = (token: Fill | undefined) => `url(#${MARKERS[(token ?? 'rule') as keyof typeof MARKERS] ?? MARKERS.rule})`;
 
 function Shape({ e }: { e: El }) {
-  const kind = (e.anim ?? (e.t === 'line' || e.t === 'path' ? 'fade' : 'fade')) as Anim;
+  const kind = (e.anim ?? 'fade') as Anim;
   const common = {
     'data-anim': kind,
     'data-at': Math.round(e.at ?? 0),
@@ -140,18 +146,18 @@ function Shape({ e }: { e: El }) {
       return (
         <g>
           {Array.from({ length: e.n }, (_, k) => {
-            const h = e.h * (0.3 + 0.7 * Math.abs(Math.sin(k * 1.7 + 0.6)));
+            const h = e.h * (0.35 + 0.65 * Math.abs(Math.sin(k * 1.7 + 0.6)));
             return (
               <rect
                 key={k}
                 data-anim="growy"
                 data-at={Math.round((e.at ?? 0) + k * (e.stagger ?? 16))}
                 data-dur={Math.round(e.dur ?? 400)}
-                x={e.x + k * step + step * 0.16}
+                x={e.x + k * step + step * 0.22}
                 y={e.y + e.h - h}
-                width={Math.max(1, step * 0.68)}
+                width={Math.max(1, step * 0.56)}
                 height={h}
-                rx={1.5}
+                rx={2}
                 fill={fillOf(e.fill, 'accent')}
                 style={{ transformBox: 'fill-box', transformOrigin: 'center bottom' }}
               />
@@ -191,34 +197,23 @@ function Shape({ e }: { e: El }) {
   }
 }
 
-/** Renders the scene's shapes, one React element per shape. */
-function Layers({ els }: { els: El[] }) {
-  return (
-    <>
-      {els.map((e, i) => (
-        <Shape key={i} e={e} />
-      ))}
-    </>
-  );
-}
-
 export default function RagExplainer() {
-  const stageRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const meterRef = useRef<HTMLSpanElement>(null);
   const scrubRef = useRef<HTMLInputElement>(null);
   const anims = useRef<Animation[]>([]);
   const counts = useRef<Array<{ el: SVGTextElement; from: number; to: number; at: number; dur: number }>>([]);
-  const time = useRef(0);
+  const clock = useRef({ start: 0, elapsed: 0, running: false });
   const raf = useRef(0);
-  const last = useRef(0);
   const playing = useRef(true);
   const phaseRef = useRef(0);
+  const meterAt = useRef(-1);
+  const countAt = useRef(0);
 
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [box, setBox] = useState({ W: 900, H: 470 });
+  const [box, setBox] = useState({ W: 900, H: 420 });
 
   const scene = SCENES[step];
   const still = useMemo(() => typeof window !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches, []);
@@ -229,32 +224,57 @@ export default function RagExplainer() {
   }, [box, still]);
 
   const els = useMemo(() => scene.els(stage), [scene, stage]);
-  const phaseAt = useCallback((ms: number) => {
-    let k = 0;
-    scene.phases.forEach((ph, i) => {
-      if (ms >= ph.at) k = i;
-    });
-    return k;
-  }, [scene]);
 
-  /** Writes the timeline onto every animation. Cheap: no React work. */
-  const apply = useCallback(() => {
-    const ms = time.current;
-    for (const a of anims.current) a.currentTime = ms;
+  /** The three things that are not the compositor's job. Small on purpose. */
+  const paint = useCallback((ms: number) => {
+    // A rolling number should not force a text layout on every frame: 20 a second
+    // is past the point where the eye can tell, and the final value is written
+    // regardless because `done` bypasses the throttle.
+    const now = performance.now();
+    const due = now - countAt.current >= 50;
+    if (due) countAt.current = now;
     for (const c of counts.current) {
       const p = Math.min(1, Math.max(0, (ms - c.at) / Math.max(1, c.dur)));
+      if (!due && !(p >= 1)) continue;
       const v = Math.round(c.from + (c.to - c.from) * (1 - Math.pow(1 - p, 3)));
       const text = v.toLocaleString('en-US');
       if (c.el.textContent !== text) c.el.textContent = text;
     }
-    if (meterRef.current) meterRef.current.style.transform = `scaleX(${Math.min(1, ms / scene.dur)})`;
-    if (scrubRef.current) scrubRef.current.value = String(Math.round(Math.min(1, ms / scene.dur) * 1000));
-    const next = phaseAt(ms);
+    const pct = Math.round(Math.min(1, ms / scene.dur) * 1000);
+    if (meterAt.current !== pct) {
+      meterAt.current = pct;
+      if (meterRef.current) meterRef.current.style.transform = `scaleX(${pct / 1000})`;
+      // 4 parts in 1000, not one: the slider is a nicety, the meter is the readout.
+      if (scrubRef.current && Math.abs(Number(scrubRef.current.value) - pct) >= 4) scrubRef.current.value = String(pct);
+    }
+    let next = 0;
+    scene.phases.forEach((ph, i) => {
+      if (ms >= ph.at) next = i;
+    });
     if (next !== phaseRef.current) {
       phaseRef.current = next;
       setPhase(next);
     }
-  }, [phaseAt, scene.dur]);
+  }, [scene]);
+
+  /** Start or stop the animations themselves — one call each, no per-frame work. */
+  const setRun = useCallback((on: boolean) => {
+    const c = clock.current;
+    if (on) {
+      c.start = performance.now() - c.elapsed;
+      for (const a of anims.current) {
+        const t = (a.effect as KeyframeEffect | null)?.getTiming();
+        const end = Number(t?.delay ?? 0) + Number(t?.duration ?? 0);
+        // Past its end already: leave it completed rather than restart it.
+        if (c.elapsed < end) a.play();
+      }
+      c.running = true;
+    } else {
+      if (c.running) c.elapsed = performance.now() - c.start;
+      for (const a of anims.current) a.pause();
+      c.running = false;
+    }
+  }, []);
 
   /* --- measure the stage, so scenes draw in the space they are given ------- */
   const useIsoEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -263,7 +283,7 @@ export default function RagExplainer() {
     if (!el) return;
     const read = () => {
       const r = el.getBoundingClientRect();
-      if (r.width > 0) setBox({ W: Math.round(r.width), H: Math.round(r.height) });
+      if (r.width > 0 && r.height > 0) setBox({ W: Math.round(r.width), H: Math.round(r.height) });
     };
     read();
     const ro = new ResizeObserver(read);
@@ -275,14 +295,15 @@ export default function RagExplainer() {
   useIsoEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
-    // Cancel the previous round: React reuses the same SVG nodes when only the
-    // geometry changed, and a stale animation with `fill: both` would keep winning
-    // the cascade. One live animation per shape, always.
+    // React reuses SVG nodes when only geometry changed, and a stale animation with
+    // `fill: both` would keep winning the cascade. One live animation per shape.
     for (const a of anims.current) a.cancel();
     anims.current = [];
     counts.current = [];
+
     svg.querySelectorAll<SVGElement>('[data-anim]').forEach((el) => {
       const kind = (el.dataset.anim ?? 'fade') as Anim;
+      if (kind === 'none') return;
       const a = el.animate(KEYFRAMES[kind], {
         duration: Math.max(1, Number(el.dataset.dur ?? 400)),
         delay: Number(el.dataset.at ?? 0),
@@ -290,6 +311,7 @@ export default function RagExplainer() {
         fill: 'both',
       });
       a.pause();
+      a.currentTime = 0;
       anims.current.push(a);
     });
     svg.querySelectorAll<SVGTextElement>('[data-count]').forEach((el) => {
@@ -301,66 +323,80 @@ export default function RagExplainer() {
         dur: Number(el.dataset.dur ?? 800),
       });
     });
-    apply();
-  }, [els, apply]);
 
-  /* --- the loop ----------------------------------------------------------- */
+    clock.current.elapsed = still ? scene.dur : 0;
+    clock.current.running = false;
+    meterAt.current = -1;
+    for (const a of anims.current) a.currentTime = clock.current.elapsed;
+    paint(clock.current.elapsed);
+    if (!still && playing.current) setRun(true);
+  }, [els, paint, scene.dur, setRun, still]);
+
+  /* --- the loop: progress and copy only ---------------------------------- */
   useEffect(() => {
-    const loop = (ts: number) => {
+    const loop = () => {
       raf.current = requestAnimationFrame(loop);
-      const dt = last.current ? Math.min(64, ts - last.current) : 0;
-      last.current = ts;
-      if (!playing.current) return;
-      time.current += dt;
-      if (time.current >= scene.dur) {
+      const c = clock.current;
+      if (!c.running) return;
+      const ms = performance.now() - c.start;
+      c.elapsed = ms;
+      paint(ms);
+      if (ms >= scene.dur) {
         if (step < SCENES.length - 1) {
-          time.current = 0;
           setStep(step + 1);
-          return;
+        } else {
+          setRun(false);
+          playing.current = false;
+          setIsPlaying(false);
         }
-        time.current = scene.dur;
-        playing.current = false;
-        setIsPlaying(false);
       }
-      apply();
     };
     raf.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf.current);
-  }, [apply, scene.dur, step]);
+  }, [paint, scene.dur, setRun, step]);
 
   const play = useCallback(
     (next?: boolean) => {
       if (still) return;
       const value = next ?? !playing.current;
+      if (value === playing.current) return;
       playing.current = value;
       setIsPlaying(value);
-      last.current = 0;
+      if (value) {
+        if (clock.current.elapsed >= scene.dur) {
+          clock.current.elapsed = 0;
+          for (const a of anims.current) a.currentTime = 0;
+        }
+        setRun(true);
+      } else {
+        setRun(false);
+      }
     },
-    [still]
+    [scene.dur, setRun, still]
   );
 
   const go = useCallback((to: number) => {
     const next = Math.max(0, Math.min(SCENES.length - 1, to));
-    time.current = 0;
-    last.current = 0;
-    phaseRef.current = 0;
-    setPhase(0);
+    clock.current.elapsed = 0;
+    clock.current.running = false;
+    phaseRef.current = -1;
+    meterAt.current = -1;
     setStep(next);
     if (typeof history !== 'undefined') history.replaceState(null, '', `#s=${next + 1}`);
   }, []);
 
   const seek = useCallback((ms: number) => {
-    time.current = Math.max(0, ms);
-    last.current = 0;
-    apply();
-  }, [apply]);
+    const c = clock.current;
+    c.elapsed = Math.max(0, Math.min(scene.dur, ms));
+    c.start = performance.now() - c.elapsed;
+    for (const a of anims.current) a.currentTime = c.elapsed;
+    paint(c.elapsed);
+  }, [paint, scene.dur]);
 
   const jumpToPhase = useCallback((at: number) => {
     play(false);
-    time.current = Math.max(0, at - scene.dur * 0.08);
-    last.current = 0;
-    apply();
-  }, [apply, play, scene.dur]);
+    seek(Math.max(0, at - scene.dur * 0.06));
+  }, [play, scene.dur, seek]);
 
   /* --- deep links, keys, and pausing in a background tab ------------------ */
   useEffect(() => {
@@ -390,11 +426,15 @@ export default function RagExplainer() {
 
   useEffect(() => {
     const onHide = () => {
-      if (document.hidden) play(false);
+      if (document.hidden && clock.current.running) {
+        setRun(false);
+        playing.current = false;
+        setIsPlaying(false);
+      }
     };
     document.addEventListener('visibilitychange', onHide);
     return () => document.removeEventListener('visibilitychange', onHide);
-  }, [play]);
+  }, [setRun]);
 
   return (
     <div className="rag" data-still={still ? 'true' : undefined}>
@@ -419,7 +459,7 @@ export default function RagExplainer() {
       </nav>
 
       <div className="rag__main">
-        <div className="rag__stage" ref={stageRef}>
+        <div className="rag__stage">
           <svg ref={svgRef} viewBox={`0 0 ${stage.W} ${stage.H}`} role="img" aria-label={`${scene.title}. ${scene.sum}`}>
             <defs>
               {(Object.keys(MARKERS) as Array<keyof typeof MARKERS>).map((token) => (
@@ -437,13 +477,15 @@ export default function RagExplainer() {
                 </marker>
               ))}
             </defs>
-            <Layers els={els} />
+            {els.map((e, i) => (
+              <Shape key={`${scene.id}-${i}`} e={e} />
+            ))}
           </svg>
         </div>
 
         <div className="rag__panel">
           <h3 className="rag__title">{scene.title}</h3>
-          <p className="rag__sum">{scene.sum}</p>
+          <p className="rag__caption" aria-live="polite" dangerouslySetInnerHTML={{ __html: scene.phases[phase]?.cap ?? '' }} />
           <div className="rag__phases" aria-label="Phases">
             {scene.phases.map((ph, i) => (
               <button
@@ -456,7 +498,6 @@ export default function RagExplainer() {
               </button>
             ))}
           </div>
-          <p className="rag__caption" aria-live="polite" dangerouslySetInnerHTML={{ __html: scene.phases[phase]?.cap ?? '' }} />
         </div>
 
         <div className="rag__dock">

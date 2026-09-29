@@ -82,7 +82,7 @@
 .rag__stage svg {
   display: block;
   inline-size: 100%;
-  block-size: clamp(15rem, 40vh, 24rem);
+  block-size: clamp(17rem, 46vh, 26rem);
 }
 
 .rag__main {
@@ -99,20 +99,27 @@
   line-height: 1.3;
 }
 
-.rag__sum {
-  margin: 0.15rem 0 0;
-  color: var(--muted);
-  font-size: 0.85rem;
+.rag__panel {
+  display: grid;
+  gap: 0.55rem;
 }
 
+/* One row on a phone: wrapping three pills into two lines is the difference
+   between a panel and a stack of panels. */
 .rag__phases {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.4rem;
-  margin-block-start: 0.7rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block-end: 0.15rem;
+}
+
+.rag__phases::-webkit-scrollbar {
+  display: none;
 }
 
 .rag__phases button {
+  flex: 0 0 auto;
   min-block-size: 2.4rem;
   padding: 0.35rem 0.75rem;
   border: 1px solid var(--rule);
@@ -131,7 +138,7 @@
 }
 
 .rag__caption {
-  margin: 0.7rem 0 0;
+  margin: 0;
   padding: 0.7rem 0.8rem;
   min-block-size: 3.6em;
   border: 1px solid var(--rule);
@@ -149,15 +156,14 @@
 /* -------------------------------------------------------------- controls */
 
 .rag__dock {
-  position: sticky;
-  inset-block-end: 0.5rem;
   display: grid;
   gap: 0.5rem;
   padding: 0.55rem 0.7rem;
   border: 1px solid var(--rule);
   border-radius: 0.65rem;
-  background: color-mix(in oklab, var(--paper) 92%, transparent);
-  backdrop-filter: blur(8px);
+  /* Solid, not blurred: a backdrop-filter above a running diagram is a compositing
+     cost on a phone for no gain. */
+  background: var(--surface);
 }
 
 .rag__track {
@@ -257,6 +263,18 @@
 
   .rag__stage svg {
     block-size: clamp(22rem, 46vh, 34rem);
+  }
+
+  .rag__phases {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .rag__dock {
+    position: sticky;
+    inset-block-end: 0.5rem;
+    background: color-mix(in oklab, var(--paper) 94%, transparent);
+    backdrop-filter: blur(8px);
   }
 
   .rag__caption {

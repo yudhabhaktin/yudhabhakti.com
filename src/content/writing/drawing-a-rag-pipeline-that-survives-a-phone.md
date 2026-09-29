@@ -56,11 +56,16 @@ The site is Astro with static output, and this page is one island: React for the
 (steps, phases, captions, controls) and the Web Animations API for the motion.
 
 Scenes are data. Every shape in a scene carries two numbers: the millisecond it should appear,
-and how long it takes. Playback is one animation frame loop that advances a single millisecond value and
-writes it onto those paused animations. React renders once per step and never per
-frame, which is why scrubbing on a phone is smooth rather than approximate. Scrubbing is
-also exact in both directions, because a scene is a pure function of that one number instead
-of a pile of transitions that were started at some point in the past.
+and how long it takes. Those become real Web Animations, which the
+browser composites. React renders once per step and never per frame, and scrubbing stays
+exact in both directions, because a scene is a pure function of that one number rather than
+a pile of transitions that were started at some point in the past.
+
+The first version was cleverer and worse. It held every shape's animation paused and wrote a
+single millisecond value onto all of them from a frame loop, so that scrubbing would be
+exact. Sixty-odd animations is sixty-odd style recalcs per frame, and it stuttered on a
+phone. The fix was to stop being clever — let the animations play, and keep the frame loop
+for the two things that cannot be composited, the counter and the progress bar.
 
 Two details I would keep in any diagram like this — both cost nothing. Every colour is a site
 token,
@@ -74,6 +79,11 @@ I cannot see these screenshots, so I checked by measuring instead. For every ste
 width I cared about, compare the bounding box of each text element against the stage
 box, and every pair of labels against each other. Anything outside the box is clipped — anything overlapping by more than a third of its area
 counts as a collision.
+
+It also forced a decision I had been avoiding. A stage 337&nbsp;px wide holds about fifteen
+shapes before it stops being a diagram; the first scenes drew sixty of them. Cutting back to
+fewer boxes, bigger type, one idea per step, did more for how the thing feels than any timing
+curve. The measurement said so before anyone had to look at it.
 
 That found three things I would otherwise have shipped. A counter overlapped the caption
 underneath it once the number got large. The rows in a short panel collapsed into each other
