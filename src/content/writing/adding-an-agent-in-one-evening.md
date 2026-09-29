@@ -97,8 +97,7 @@ through their own hook mechanisms.
 
 ## Why an evening was enough
 
-The cost of adopting an agent is not the agent. It is everything the agent needs in order to
-be useful without me standing behind it, and in this repository most of that was already there
+The cost of adopting an agent is not the agent. It is everything the agent needs to be useful without me standing behind it, and in this repository most of that was already there
 for unrelated reasons.
 
 The repository explains itself. There is a file describing the system and its layout, a status
