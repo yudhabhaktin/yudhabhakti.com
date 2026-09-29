@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RagExplainer from '../components/rag/RagExplainer.tsx';
+import { SCENES } from '../components/rag/scenes';
+import { SITE } from '../consts';
+
+// The step copy is imported rather than retyped: the walkthrough, the text version
+// below it and the blog post all describe the same pipeline, and they should not be
+// able to drift apart.
+
+const description =
+  'An interactive walkthrough of a retrieval-augmented generation pipeline: 100,000 documents in, parsing, chunking, embedding, three indexes, hybrid retrieval, reranking, and an answer that cites its sources.';
+---
+
+<BaseLayout
+  title="A RAG pipeline, end to end"
+  description={description}
+  keywords={['rag', 'retrieval augmented generation', 'hybrid search', 'embeddings', 'reranking', 'vector index']}
+  breadcrumbs={[{ name: 'Home', item: SITE.url }, { name: 'A RAG pipeline' }]}
+>
+  <section class="hero">
+    <h1>A RAG pipeline, end to end</h1>
+    <p class="muted">
+      Raw documents in, cited answers out — the eight stages in between, animated, with the
+      reasoning behind each one.
+    </p>
+  </section>
+
+  <section>
+    <div class="prose">
+      <p>
+        Retrieval-augmented generation is usually drawn as one wide landscape diagram, which is
+        exactly the wrong shape for the device most people will read it on. This page draws it
+        instead in the space it is given: the same scene stacks vertically on a phone and forms
+        rows on a laptop, and the type keeps its real size either way.
+      </p>
+      <p>
+        Pick a step, press play, or scrub the timeline. Every scene is a pure function of a
+        millisecond offset, so scrubbing backwards shows you the same thing scrubbing forwards
+        does, and deep links (<code>#s=6</code>) point at a specific step.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The walkthrough</h2>
+    <RagExplainer client:load />
+  </section>
+
+  <section>
+    <h2>The eight steps, in text</h2>
+    <div class="prose">
+      <p>
+        If you would rather read than watch, this is the same pipeline in prose. It is also what
+        a reader without JavaScript sees.
+      </p>
+    </div>
+    <ol class="rag-plain">
+      {
+        SCENES.map((scene, i) => (
+          <li>
+            <h3>
+              <span class="rag-plain__n">{i + 1}</span> {scene.title}
+            </h3>
+            <p class="muted">{scene.sum}</p>
+            <ul>
+              {scene.phases.map((phase) => (
+                <li>
+                  <strong>{phase.label}.</strong>
+                  <span set:html={` ${phase.cap}`} />
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section>
+    <h2>How it is built</h2>
+    <div class="prose">
+      <p>
+        The page is an Astro island: the surrounding site stays static HTML, and the walkthrough
+        hydrates as one React component. React owns the shell — steps, phases, captions,
+        controls — while the motion runs on the Web Animations API. Each shape in a scene
+        carries the moment it should appear and how long it takes; playback writes a single
+        millisecond value onto those paused animations, so a frame costs no React work and a
+        phone can scrub without dropping the diagram.
+      </p>
+      <p>
+        Every scene measures itself from the box it is handed, and every colour is one of this
+        site&rsquo;s tokens rather than a hex value, which is why the diagram follows the theme
+        toggle and stays legible from a 320&nbsp;px phone to a desktop.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Reference</h2>
+    <div class="prose">
+      <p>
+        The form of this page &mdash; a step list beside an animated stage, phases within a
+        step, play and scrub &mdash; comes from
+        <a href="https://ardyadipta.github.io/blog/rag-pipeline-explainer.html" rel="noopener">
+          &ldquo;Inside a 100,000-document RAG knowledge base&rdquo;
+        </a>
+        by Ardya Dipta Nandaviri, which is an excellent walkthrough in its own right. This page
+        is an independent implementation: its own scenes, copy and player. The numbers here
+        (100,000 documents, 88,412 unique, 768-dimension vectors, a 71/22/7% parse split) are
+        illustrative rather than measured.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* The text version of the walkthrough: plain, crawlable, no island involved. */
+  .rag-plain {
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .rag-plain h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .rag-plain__n {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin-inline-end: 0.4rem;
+  }
+
+  .rag-plain ul {
+    margin: 0.4rem 0 0;
+    padding-inline-start: 1.1rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .rag-plain strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .rag-plain code,
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--rule);
+    border-radius: 0.25rem;
+  }
+</style>

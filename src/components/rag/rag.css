@@ -1,0 +1,271 @@
+/**
+ * The walkthrough reads as part of the site: same tokens, same mono/sans pairing,
+ * and it follows the theme toggle because every colour is a token rather than a hex.
+ */
+
+.rag {
+  /* Break out of the 46rem article column without touching the layout: the diagram
+     needs width the prose does not. 100vw minus a gutter stays clear of the scrollbar. */
+  inline-size: min(100vw - 2.5rem, 66rem);
+  margin-inline: calc(50% - min(100vw - 2.5rem, 66rem) / 2);
+  margin-block-start: 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+/* ------------------------------------------------------------- step list */
+
+.rag__steps ol {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0 0 0.5rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.rag__steps li {
+  flex: 0 0 auto;
+}
+
+.rag__steps button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-align: left;
+  white-space: nowrap;
+  scroll-snap-align: center;
+  cursor: pointer;
+}
+
+.rag__steps button:hover {
+  color: var(--ink);
+  border-color: color-mix(in oklab, var(--ink) 25%, var(--rule));
+}
+
+.rag__steps button[aria-current='step'] {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+}
+
+.rag__step-n {
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.rag__steps button[aria-current='step'] .rag__step-n {
+  color: var(--accent);
+}
+
+/* ----------------------------------------------------------------- stage */
+
+.rag__stage {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.65rem;
+  padding: 0.35rem;
+  overflow: hidden;
+}
+
+.rag__stage svg {
+  display: block;
+  inline-size: 100%;
+  block-size: clamp(15rem, 40vh, 24rem);
+}
+
+.rag__main {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+/* ------------------------------------------------------------ the panel */
+
+.rag__title {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.rag__sum {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.rag__phases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-start: 0.7rem;
+}
+
+.rag__phases button {
+  min-block-size: 2.4rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.rag__phases button[aria-current='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.rag__caption {
+  margin: 0.7rem 0 0;
+  padding: 0.7rem 0.8rem;
+  min-block-size: 3.6em;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--ink) 4%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.rag__caption b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- controls */
+
+.rag__dock {
+  position: sticky;
+  inset-block-end: 0.5rem;
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.65rem;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.rag__track {
+  block-size: 2px;
+  background: var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.rag__meter {
+  display: block;
+  block-size: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.rag__scrub {
+  inline-size: 100%;
+  block-size: 1.5rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.rag__buttons {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 0.5rem;
+}
+
+.rag__buttons button {
+  min-block-size: 2.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.rag__buttons button:hover:not(:disabled) {
+  border-color: color-mix(in oklab, var(--ink) 30%, var(--rule));
+}
+
+.rag__buttons button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.rag__play {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--paper) !important;
+  font-weight: 600;
+}
+
+.rag :is(button, input):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rag[data-still] .rag__play {
+  display: none;
+}
+
+/* ----------------------------------------------------------- wide screens */
+
+@media (min-width: 56rem) {
+  .rag {
+    grid-template-columns: 13.5rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .rag__steps {
+    position: sticky;
+    inset-block-start: 4.5rem;
+  }
+
+  .rag__steps ol {
+    flex-direction: column;
+    overflow: visible;
+    padding: 0;
+    gap: 0.25rem;
+  }
+
+  .rag__steps li {
+    flex: 1 1 auto;
+  }
+
+  .rag__steps button {
+    inline-size: 100%;
+    border-radius: 0.5rem;
+    white-space: normal;
+  }
+
+  .rag__stage svg {
+    block-size: clamp(22rem, 46vh, 34rem);
+  }
+
+  .rag__caption {
+    min-block-size: 3em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rag__meter {
+    transition: none;
+  }
+}

@@ -1,5 +1,11 @@
 {
   "extends": "astro/tsconfigs/strict",
+  // The walkthrough is the only React on the site: these two lines are what let the
+  // island compile with the automatic JSX runtime instead of React.createElement.
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
 }

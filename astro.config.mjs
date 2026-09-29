@@ -1,6 +1,7 @@
 // @ts-check
 import { readdirSync, readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 
@@ -44,6 +45,9 @@ export default defineConfig({
   // navigation feels instant without preloading 23 posts on the listing page.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   integrations: [
+    // The interactive bits are React islands and nothing else: every page still
+    // ships as static HTML, and a visitor with JS off gets the written version.
+    react(),
     sitemap({
       serialize(item) {
         // Normalise here rather than trusting the integration to follow
