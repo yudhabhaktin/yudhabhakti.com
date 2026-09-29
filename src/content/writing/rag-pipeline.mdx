@@ -1,8 +1,10 @@
 ---
 title: RAG Pipeline
 description: >-
-  The eight stages of a retrieval pipeline, animated: parsing, chunking, embedding, three
-  indexes, hybrid retrieval, reranking, and an answer that cites its sources.
+  The twelve stages of a retrieval pipeline, animated: a manifest and dedupe, tiered parsing,
+  structure-aware chunking, enrichment and embedding, three indexes, metadata filtering, BM25
+  and dense search, hybrid retrieval and reranking, GraphRAG, and an answer that cites its
+  sources.
 published: 2026-09-29
 tags: ['rag', 'llm', 'design', 'web', 'applied-ai']
 draft: false
@@ -51,10 +53,14 @@ whatever the container happens to be.
 
 ## What the page does
 
-There are eight steps: the corpus, manifest and dedupe, tiered parsing, structure-aware
-chunking, enrichment and embedding, the three indexes, hybrid retrieval and reranking, and
-the answer with its citations. Each step has two or three phases with their own caption, so
-the narration changes as the scene fills in rather than sitting static next to it.
+There are twelve steps: the corpus and its scale, the manifest and dedupe, tiered parsing,
+structure-aware chunking, enrichment and embedding, storage and three rebuildable indexes,
+metadata filtering, BM25 for exact identifiers, dense search over an HNSW graph, hybrid
+fusion and reranking, GraphRAG for multi-hop questions, and the query path end to end.
+
+Each step has two or three phases with
+their own caption, so the narration changes as the scene fills in rather than sitting static
+next to it.
 
 You can press play and let it run through the whole thing, step by step. You can scrub. You
 can deep-link a single step — `#s=6` opens storage and indexes. The arrow keys work too, if you

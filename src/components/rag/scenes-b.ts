@@ -1,201 +1,294 @@
-import { bar, card, chip, label, panel } from './helpers';
-import { cols, fit, stack, wrap, type El, type Scene, type Stage } from './types';
+import { arrowDown, callout, card, chip, docIcon, inner, keyRows, label, legend, legendRow, panel, rankList, shareBar, stat, tileGrid } from './helpers';
+import { clamp, cols, fit, stack, wrap, type El, type Scene, type Stage } from './types';
 
-/** Steps 5-8. Same contract as the first four: one idea per step, drawn in the box. */
+/**
+ * Steps 5-8: what leaves the parser, where it lives, what filters it, and the
+ * lexical half of retrieval.
+ *
+ * Same contract as the first four — a scene is a function of the box it is handed,
+ * so a phone stacks what a laptop puts in columns, and nothing is dropped.
+ */
+
+const CALL_H = 64;
+
+/** The chunk on the bench, shared by the enrichment step. */
+function chunkCard(st: Stage, x: number, y: number, w: number, h: number, at: number): El[] {
+  const out: El[] = [card(x, y, w, h, at), ...chip(x + 11, y + 10, 20, 'c203', at + 120, 'blue', 10, true)];
+  out.push(label(x + 11, y + 46, fit('Payments Runbook \u203a Failover', w - 22, 12), at + 200, 12, 'ink', { strong: true }));
+  out.push(label(x + 11, y + 60, '318 tokens \u00b7 1 of 3 chunks', at + 260, 10, 'muted', { mono: true }));
+  out.push(...keyRows(x + 11, y + 78, w - 22, [['section', '4.2 \u00b7 Failover'], ['pages', '14\u201316']], at + 320, 14));
+  return out;
+}
 
 export const enrichment: Scene = {
-  id: 'enrichment',
-  title: 'Enrichment and embedding',
-  sum: 'Every chunk leaves with metadata, a summary, and a vector.',
-  dur: 8200,
+  id: 'enrich',
+  title: 'Enrichment, then embedding',
+  sum: 'Attach the metadata you will filter on, then turn every chunk into a vector.',
+  dur: 9000,
   phases: [
-    { label: 'Metadata', cap: 'Section, year, type — the fields you will filter on later.', at: 0 },
-    { label: 'Summary', cap: 'A short summary, so the reader gets context without the whole chunk.', at: 1200 },
-    { label: 'Embedding', cap: '768 numbers per chunk. This is the part you cannot read.', at: 2900 },
+    { label: 'System metadata', cap: 'Copied from the catalog: tenant, groups, dates, pipeline version.', at: 0 },
+    { label: 'Extracted metadata', cap: 'One model call per document fills the fields the file never stated.', at: 1700 },
+    { label: 'Embedding', cap: '768 numbers per chunk. You cannot read them, so the field is the picture.', at: 3600 },
   ],
   els(st) {
     const { W, H, pad, tall } = st;
     const out: El[] = [];
-    const inner = W - pad * 2;
-    const chunkH = 52;
-    const top = pad + 22;
-    out.push(card(pad, top, inner, chunkH, 80));
-    out.push(label(pad + 11, top + chunkH / 2 - 4, '§4.2 Refunds', 200, 12, 'ink', { strong: true }));
-    out.push(label(pad + 11, top + chunkH / 2 + 12, '318 tokens', 280, 10.5, 'muted', { mono: true }));
+    const callY = H - pad - CALL_H;
+    const top = pad + 4;
+    const bodyH = callY - 14 - top;
 
-    const bodyTop = top + chunkH + 16;
-    const bodyH = H - pad - bodyTop - 6;
+    const sysRows: Array<[string, string]> = [
+      ['tenant', 'acme'],
+      ['acl', '{grp:pay, grp:eng}'],
+      ['lang', 'en'],
+      ['parser_v', 'parse-v4'],
+    ];
+    const extRows: Array<[string, string]> = [
+      ['doc_type', 'runbook'],
+      ['effective', '2025-11'],
+      ['owner', 'Team Atlas'],
+      ['entities', 'Ledger Service, on-call'],
+    ];
+
     if (tall) {
-      const rows = stack(bodyTop, bodyH, 3, 10);
-      ['section: 4.2 Refunds', 'year: 2024', 'type: policy_pdf'].forEach((t, i) => {
-        out.push(...chip(pad, rows.y(i), 24, t, 700 + i * 190, false, 11));
-      });
-      out.push(card(pad, rows.y(1) + 30, inner, 40, 1900));
-      out.push(label(pad + 11, rows.y(1) + 42, 'Refunds are issued within 5', 2050, 11, 'ink'));
-      out.push(label(pad + 11, rows.y(1) + 56, 'business days of approval.', 2140, 11, 'ink'));
-      out.push(label(pad, rows.y(2) + 30, 'vector: 768 dimensions', 3000, 11, 'muted'));
-      out.push({ t: 'bars', x: pad, y: rows.y(2) + 38, w: inner, h: Math.max(14, H - pad - (rows.y(2) + 38)), n: 12, fill: 'accent', at: 3100, dur: 520, stagger: 34 });
+      // Phone: one panel carries the chunk and the system metadata, the second the
+      // extracted fields and the vector field, so nothing has to squeeze.
+      const chunkH = 118;
+      out.push(...panel(pad, top, W - pad * 2, chunkH, 'Chunk c203', 60, undefined, 'Payments Runbook \u203a Failover \u00b7 318 tokens'));
+      out.push(...keyRows(pad + 11, top + 56, W - pad * 2 - 22, sysRows, 1100, 15));
+      const ey = top + chunkH + 12;
+      const eh = callY - 14 - ey;
+      out.push(...panel(pad, ey, W - pad * 2, eh, 'Extracted, then embedded', 2400, 'teal', 'one model call \u00b7 768-d vector'));
+      const ei = inner(pad, ey, W - pad * 2, eh, true);
+      out.push(...keyRows(ei.x, ei.y, ei.w, extRows.slice(0, 2), 2600, 15));
+      const gridY = ei.y + 34;
+      out.push(...tileGrid(ei.x, gridY, ei.w, Math.max(16, ey + eh - 24 - gridY), 40, 2900, 'chunks', 7));
+      out.push(...legendRow(ei.x, ey + eh - 12, [{ hue: 'blue', text: 'payments' }, { hue: 'amber', text: 'ledger' }, { hue: 'teal', text: 'security' }], 3400));
     } else {
-      const c = cols(pad, inner, 3, 16);
-      const full = H - pad - bodyTop - 6;
-      ['section: 4.2 Refunds', 'year: 2024', 'type: policy_pdf'].forEach((t, i) => {
-        out.push(...chip(c.x(0), bodyTop + i * 32, 24, t, 700 + i * 190, false, 11));
-      });
-      out.push(card(c.x(1), bodyTop, c.col, full, 1900));
-      out.push(label(c.x(1) + 11, bodyTop + 18, 'Refunds are issued', 2050, 11, 'ink'));
-      out.push(label(c.x(1) + 11, bodyTop + 33, 'within 5 business', 2140, 11, 'ink'));
-      out.push(label(c.x(1) + 11, bodyTop + 48, 'days of approval.', 2230, 11, 'ink'));
-      out.push(label(c.x(2), bodyTop + 12, 'vector: 768 dimensions', 3000, 11, 'muted'));
-      out.push({ t: 'bars', x: c.x(2), y: bodyTop + 22, w: c.col, h: full - 24, n: 12, fill: 'accent', at: 3100, dur: 520, stagger: 34 });
+      const c = cols(pad, W - pad * 2, 2, 16);
+      const leftW = c.col;
+      const cardH = 104;
+      out.push(...chunkCard(st, c.x(0), top, leftW, cardH, 60));
+      const stackY = top + cardH + 10;
+      const metaH = (callY - 14 - stackY - 10) / 2;
+      // A short stage gets fewer rows rather than overlapping ones.
+      const fitRows = (rowsIn: Array<[string, string]>, boxH: number, top2: number) =>
+        rowsIn.slice(0, Math.max(1, Math.floor((boxH - top2 - 10) / 16)));
+      out.push(...panel(c.x(0), stackY, leftW, metaH, 'System metadata \u00b7 free', 900, undefined, 'copied, exact'));
+      out.push(...keyRows(c.x(0) + 11, stackY + 46, leftW - 22, fitRows(sysRows, metaH, 46), 1100, 16));
+      out.push(...panel(c.x(0), stackY + metaH + 10, leftW, metaH, 'Extracted \u00b7 one call per doc', 1500, 'violet', 'closed schema, validated'));
+      out.push(...keyRows(c.x(0) + 11, stackY + metaH + 56, leftW - 22, fitRows(extRows, metaH, 56), 1700, 16));
+      out.push(...panel(c.x(1), top, c.col, bodyH, 'Embedding space \u00b7 768-d', 2400, 'teal', 'drawn in 2-D'));
+      const ei = inner(c.x(1), top, c.col, bodyH, true);
+      // From the bottom up: stat, then legend, then whatever height is left for the field.
+      const statY = ei.y + ei.h - 78;
+      const legendY = statY - 8 - 45;
+      const fieldH = legendY - 10 - ei.y;
+      out.push(...tileGrid(ei.x, ei.y, ei.w, Math.max(20, fieldH), 56, 2800, 'chunks', 7));
+      out.push(...legend(ei.x, legendY, [
+        { hue: 'blue', text: 'payments' },
+        { hue: 'amber', text: 'ledger' },
+        { hue: 'teal', text: 'security' },
+      ], 3200, 15, 10));
+      out.push(...stat(ei.x, statY, ei.w, 'Dimensions', 768, 'numbers per chunk', 3600, 22));
     }
+
+    out.push(...callout(pad, callY, W - pad * 2, CALL_H, 'Metadata is what makes retrieval legible', [
+      ['Filter on', 'tenant, groups, dates, doc_type'],
+      ['Extract for', 'effective date, owner, entities'],
+    ], 5200, 'amber'));
     return out;
   },
 };
 
 export const indexes: Scene = {
-  id: 'indexes',
-  title: 'Storage and indexes',
-  sum: 'One store, three ways in: vectors, terms, and metadata.',
-  dur: 8200,
+  id: 'storage',
+  title: 'Storage and indexes: derived, rebuildable views',
+  sum: 'The parsed intermediate representation is the source of truth. Every index is a view you can rebuild from it.',
+  dur: 9500,
   phases: [
-    { label: 'Vectors', cap: 'An approximate nearest-neighbour index. Fast, not exact.', at: 0 },
-    { label: 'Terms', cap: 'An inverted index, for the queries that are really a string match.', at: 1400 },
-    { label: 'Filters', cap: 'Metadata filters, applied before either of them ranks anything.', at: 3200 },
+    { label: 'Originals and IR', cap: 'Object storage keeps the file and the parse; Postgres keeps the catalog.', at: 0 },
+    { label: 'Derived views', cap: 'Three indexes, each answering a question the others cannot.', at: 1800 },
+    { label: 'Everything is rebuildable', cap: 'Lose an index and you lose hours, not the corpus.', at: 4200 },
   ],
   els(st) {
     const { W, H, pad, tall } = st;
     const out: El[] = [];
-    const inner = W - pad * 2;
-    const top = pad + 26;
-    const gap = tall ? 10 : 14;
-    const boxes = [
-      { title: 'vector index · hnsw', accent: false },
-      { title: 'lexical index · inverted', accent: false },
-      { title: 'metadata filters', accent: true },
-    ];
-    const layout = (i: number) => {
-      if (tall) {
-        const rows = stack(top, H - pad - 14 - top, boxes.length, gap);
-        return { x: pad, y: rows.y(i), w: inner, h: rows.row };
-      }
-      const c = cols(pad, inner, boxes.length, gap);
-      return { x: c.x(i), y: top, w: c.col, h: H - pad - 14 - top };
-    };
+    const callY = H - pad - CALL_H;
+    const top = pad + 4;
+    const bodyH = callY - 16 - top;
 
-    const a = layout(0);
-    out.push(...panel(a.x, a.y, a.w, a.h, boxes[0].title, 100));
-    const dots = (() => {
-      const cx = cols(a.x + 18, a.w - 36, 3, 10);
-      const cy = stack(a.y + 40, Math.max(20, a.h - 54), 2, 12);
-      const pts: Array<[number, number]> = [];
-      for (let r = 0; r < 2; r++) for (let k = 0; k < 3; k++) pts.push([cx.x(k) + cx.col / 2, cy.y(r) + cy.row / 2]);
-      return pts;
-    })();
-    dots.forEach((p, i) => out.push({ t: 'circle', cx: p[0], cy: p[1], r: 4, fill: i < 3 ? 'accent' : 'ink-soft', stroke: 'accent-line', sw: 1, anim: 'pop', at: 260 + i * 60, dur: 320 }));
-    [[0, 1], [1, 2], [2, 4], [3, 4]].forEach(([i, j], k) => {
-      out.push({ t: 'line', x1: dots[i][0], y1: dots[i][1], x2: dots[j][0], y2: dots[j][1], stroke: 'accent-line', sw: 1, dash: true, anim: 'fade', at: 620 + k * 90, dur: 300 });
-    });
+    const irRows: Array<[string, string]> = [['doc_id', 'doc-88214'], ['hash', 'sha256:44c7\u2026'], ['parser_v', 'parse-v4'], ['status', 'indexed']];
 
-    const b = layout(1);
-    out.push(...panel(b.x, b.y, b.w, b.h, boxes[1].title, 1400));
-    ['refund', 'invoice', 'order id'].slice(0, Math.max(1, Math.floor((b.h - 44) / 26))).forEach((t, i) => {
-      const rowH = 22;
-      const y = b.y + 36 + i * (rowH + 4);
-      out.push(label(b.x + 11, y + 8, t, 1560 + i * 180, 11, 'ink', { mono: true }));
-      out.push(...bar(b.x + 76, y, Math.max(24, b.w - 88), 8, 0.9 - i * 0.24, 1640 + i * 180, false));
-    });
-
-    const c3 = layout(2);
-    out.push(...panel(c3.x, c3.y, c3.w, c3.h, boxes[2].title, 3200));
-    const rows2: Array<[string, string]> = [['section', '4.2 Refunds'], ['year', '2024'], ['type', 'policy_pdf']];
-    rows2.slice(0, Math.max(1, Math.floor((c3.h - 44) / 24))).forEach(([k, v], i) => {
-      const y = c3.y + 38 + i * 24;
-      out.push(label(c3.x + 11, y, k, 3380 + i * 160, 11, 'muted'));
-      out.push(label(c3.x + c3.w - 11, y, v, 3440 + i * 160, 11, 'ink', { anchor: 'end' }));
-    });
-    return out;
-  },
-};
-
-export const retrieval: Scene = {
-  id: 'retrieval',
-  title: 'Hybrid retrieval and rerank',
-  sum: 'Two searches, one fused list, one reranker, then the answer.',
-  dur: 7800,
-  phases: [
-    { label: 'Two searches', cap: 'A term search and a vector search, over the same corpus.', at: 0 },
-    { label: 'Fuse', cap: 'Reciprocal rank fusion, so neither search can dominate.', at: 1500 },
-    { label: 'Rerank', cap: 'A cross-encoder reorders the top candidates. This is the slow step.', at: 3300 },
-  ],
-  els(st) {
-    const { W, H, pad, tall } = st;
-    const out: El[] = [];
-    const inner = W - pad * 2;
-    const rows: Array<{ text: string; accent: boolean; at: number; h: number; mono?: boolean }> = [
-      { text: 'query: how long do refunds take', accent: false, at: 80, h: 28, mono: true },
-      { text: 'lexical: 412 hits', accent: false, at: 620, h: 26 },
-      { text: 'vector: 118 hits', accent: false, at: 860, h: 26 },
-      { text: 'fuse → 60 candidates', accent: false, at: 1600, h: 26 },
-      { text: 'rerank → 5 passages', accent: true, at: 3400, h: 26 },
-    ];
     if (tall) {
-      const gap = 14;
-      const totalH = rows.reduce((a, r) => a + r.h, 0) + gap * (rows.length - 1);
-      const top = pad + Math.max(0, (H - pad * 2 - totalH) / 2);
-      let y = top;
-      rows.forEach((r, i) => {
-        if (i > 0) out.push({ t: 'line', x1: pad + 14, y1: y - gap, x2: pad + 14, y2: y, stroke: 'rule', sw: 1, anim: 'fade', at: r.at - 160, dur: 260 });
-        out.push(...chip(pad, y, r.h, r.text, r.at, r.accent, 11));
-        y += r.h + gap;
-      });
+      const srcH = 96;
+      out.push(...panel(pad, top, W - pad * 2, srcH, 'Originals and the IR', 60, undefined, 'object store \u00b7 IR JSON \u00b7 crops'));
+      out.push(...keyRows(pad + 11, top + 52, W - pad * 2 - 22, irRows.slice(0, 2), 400, 15));
+      const idxY = top + srcH + 12;
+      const idxH = callY - 14 - idxY;
+      out.push(...panel(pad, idxY, W - pad * 2, idxH, 'Derived views \u00b7 rebuildable', 1900, 'amber', 'lose one and you lose hours, not the corpus'));
+      out.push(...keyRows(pad + 11, idxY + 58, W - pad * 2 - 22, [
+        ['BM25', 'term \u2192 postings'],
+        ['HNSW', '768-d \u00b7 int8 \u00b7 filtered'],
+        ['Graph', 'entities \u00b7 typed edges'],
+      ], 2100, 20));
+      out.push(...legendRow(pad + 11, idxY + idxH - 14, [{ hue: 'amber', text: 'built from the IR' }, { text: 'never from the original file' }], 3000));
     } else {
-      const c = cols(pad, inner, 3, 18);
-      const cx = (i: number) => c.x(i) + c.col / 2;
-      out.push(...chip(cx(1) - Math.max(52, rows[0].text.length * 6.16 + 20) / 2, pad + 6, 28, rows[0].text, 80, false, 11));
-      out.push(...chip(cx(0) - Math.max(52, rows[1].text.length * 6.16 + 20) / 2, pad + 58, 26, rows[1].text, 620, false, 11));
-      out.push(...chip(cx(2) - Math.max(52, rows[2].text.length * 6.16 + 20) / 2, pad + 58, 26, rows[2].text, 860, false, 11));
-      out.push(...chip(cx(1) - Math.max(52, rows[3].text.length * 6.16 + 20) / 2, pad + 110, 26, rows[3].text, 1600, false, 11));
-      out.push(...chip(cx(1) - Math.max(52, rows[4].text.length * 6.16 + 20) / 2, pad + 162, 26, rows[4].text, 3400, true, 11));
-      const mid = pad + 6 + 14;
-      [[cx(1), mid + 22, cx(0), pad + 58], [cx(1), mid + 22, cx(2), pad + 58], [cx(0), pad + 88, cx(1), pad + 110], [cx(2), pad + 88, cx(1), pad + 110], [cx(1), pad + 140, cx(1), pad + 162]].forEach((p, i) => {
-        out.push({ t: 'line', x1: p[0], y1: p[1], x2: p[2], y2: p[3], stroke: 'rule', sw: 1, anim: 'draw', at: 400 + i * 120, dur: 300 });
-      });
+      const c = cols(pad, W - pad * 2, 5, 14);
+      const srcW = c.col * 2 + 14;
+      const srcH = bodyH * 0.42;
+      out.push(...panel(pad, top, srcW, srcH, 'Object store', 60, undefined, 'originals \u00b7 IR JSON \u00b7 figure crops'));
+      out.push(...legend(pad + 11, top + srcH - 46, [{ hue: 'blue', text: 'pdf' }, { hue: 'amber', text: 'scan' }, { hue: 'teal', text: 'image' }], 300, 14));
+      const catX = pad + srcW + 14;
+      out.push(...panel(catX, top, W - pad - catX, srcH, 'Catalog \u00b7 Postgres', 500, 'blue', 'documents \u00b7 chunks \u00b7 versions \u00b7 runs'));
+      out.push(...keyRows(catX + 11, top + 56, W - pad - catX - 22, irRows, 700, 15));
+      const idxTop = top + srcH + 26;
+      const idxH = callY - 14 - idxTop;
+      const n = 3;
+      const col = cols(pad, W - pad * 2, n, 14);
+      out.push(...panel(col.x(0), idxTop, col.col, idxH, 'BM25 inverted index', 1900, 'amber', 'term \u2192 postings \u00b7 analyzers'));
+      out.push(...keyRows(col.x(0) + 11, idxTop + 56, col.col - 22, [['err-4092', 'c17 c88'], ['failover', 'c17 c203'], ['payments', '41k']], 2100, 15));
+      out.push(...panel(col.x(1), idxTop, col.col, idxH, 'HNSW vector index', 2200, 'teal', '768-d \u00b7 int8 \u00b7 filtered'));
+      out.push(...keyRows(col.x(1) + 11, idxTop + 56, col.col - 22, [['M', '16\u201332'], ['ef_search', '64\u2013256'], ['recall@10', '\u2265 0.95']], 2400, 15));
+      out.push(...panel(col.x(2), idxTop, col.col, idxH, 'Graph \u00b7 optional', 2500, 'violet', 'entities \u00b7 typed edges \u00b7 provenance'));
+      out.push(...keyRows(col.x(2) + 11, idxTop + 56, col.col - 22, [['nodes', '4,100'], ['edges', '11,600'], ['built by', '1 LLM pass']], 2700, 15));
+      out.push(...arrowDown(col.x(0) + col.col / 2, top + srcH + 6, idxTop - 4, 'rebuild', 1600));
+      out.push(...arrowDown(col.x(1) + col.col / 2, top + srcH + 6, idxTop - 4, 'rebuild', 1700));
+      out.push(...arrowDown(col.x(2) + col.col / 2, top + srcH + 6, idxTop - 4, 'rebuild', 1800));
     }
+
+    out.push(...callout(pad, callY, W - pad * 2, CALL_H, 'The IR is the source of truth', [
+      ['Rebuild cost', 'hours, not days'],
+      ['What breaks', 'an index, never the corpus'],
+    ], 4600, 'green'));
     return out;
   },
 };
 
-export const answer: Scene = {
-  id: 'answer',
-  title: 'The grounded answer',
-  sum: 'Answer from the retrieved passages, cite each claim, refuse when they disagree.',
-  dur: 7800,
+export const filter: Scene = {
+  id: 'filter',
+  title: 'Metadata filtering: security, scope and boosts',
+  sum: 'ACL filters come from the session and are non-negotiable. Scoping filters come from the query. How the engine applies them decides whether the result is fast and correct.',
+  dur: 9500,
   phases: [
-    { label: 'Passages', cap: 'Five passages, ranked. The reranker decided the order.', at: 0 },
-    { label: 'Answer', cap: 'The model writes from these passages only, and cites them.', at: 1600 },
-    { label: 'Refusal', cap: 'If the passages disagree, the answer says so instead of guessing.', at: 3600 },
+    { label: 'The question', cap: 'A user question, and the text the retrievers will see.', at: 0 },
+    { label: 'Hard filters', cap: 'Tenant and groups are injected in code, from the authenticated session.', at: 1600 },
+    { label: 'Soft filters', cap: 'doc_type, dates and boosts come from the query and the extracted metadata.', at: 3200 },
+    { label: 'Where it breaks', cap: 'A selective filter strands the HNSW walk, and the engine falls back to exact search.', at: 5000 },
   ],
   els(st) {
     const { W, H, pad, tall } = st;
     const out: El[] = [];
-    const inner = W - pad * 2;
-    const top = pad + 26;
-    const rows = stack(top, (H - pad - 16 - top) * (tall ? 0.55 : 0.5), 4, 7);
-    const names = ['§4.2 Refunds · 2024', '§4.2 Refunds · 2023', 'Table 3: paths', '§4.3 Exchanges'];
-    const scores = ['0.94', '0.89', '0.81', '0.62'];
-    names.forEach((n, i) => {
-      out.push(card(pad, rows.y(i), inner, rows.row, 100 + i * 220, i === 0));
-      out.push(label(pad + 11, rows.y(i) + rows.row / 2, n, 200 + i * 220, 11.5));
-      out.push(label(W - pad - 11, rows.y(i) + rows.row / 2, scores[i], 240 + i * 220, 10.5, 'muted', { anchor: 'end', mono: true }));
+    const callY = H - pad - CALL_H;
+    const top = pad + 4;
+    const qH = 54;
+    const out_ = out;
+
+    out_.push(card(pad, top, W - pad * 2, qH, 60, 'blue'));
+    out_.push(...chip(pad + 11, top + 10, 20, 'user', 160, 'blue', 10, true));
+    out_.push(label(pad + 50, top + 24, fit('Q3 2025 security review: SSO findings', W - pad * 2 - 66, 12), 220, 12, 'ink', { strong: true }));
+    out_.push(label(pad + 11, top + 42, fit('text sent to the retrievers: security review SSO findings', W - pad * 2 - 22, 10), 300, 10, 'muted', { mono: true }));
+
+    const bodyTop = top + qH + 14;
+    const bodyH = callY - 14 - bodyTop;
+    const hard: Array<[string, string]> = [['tenant_id', 'acme'], ['acl \u2229', '{grp:sec, grp:eng}'], ['source', 'auth context']];
+    const soft: Array<[string, string]> = [['doc_type', 'security_review'], ['modified_at', '\u2265 2025-07-01'], ['boost', 'title match \u00d7 1.4']];
+
+    if (tall) {
+      const rows = stack(bodyTop, bodyH, 2, 10);
+      out_.push(...panel(pad, rows.y(0), W - pad * 2, rows.row, 'Hard \u00b7 injected in code', 1400, 'red', 'ANDed with every retriever'));
+      out_.push(...keyRows(pad + 11, rows.y(0) + 52, W - pad * 2 - 22, hard, 1600, 18));
+      out_.push(...panel(pad, rows.y(1), W - pad * 2, rows.row, 'Soft \u00b7 from the query', 3000, 'blue', 'the model may propose these'));
+      out_.push(...keyRows(pad + 11, rows.y(1) + 52, W - pad * 2 - 22, soft, 3200, 18));
+    } else {
+      const c = cols(pad, W - pad * 2, 2, 16);
+      out_.push(...panel(c.x(0), bodyTop, c.col, bodyH, 'Hard \u00b7 injected in code', 1400, 'red', 'ANDed with every retriever'));
+      out_.push(...keyRows(c.x(0) + 11, bodyTop + 62, c.col - 22, hard, 1600, 20));
+      out_.push(...legend(c.x(0) + 11, bodyTop + bodyH - 56, [
+        { hue: 'red', text: 'never generated by the model' },
+        { hue: 'red', text: 'hard isolation = partition, not filter' },
+      ], 2100, 15));
+      out_.push(...panel(c.x(1), bodyTop, c.col, bodyH, 'Soft \u00b7 from the query', 3000, 'blue', 'the model may propose these'));
+      out_.push(...keyRows(c.x(1) + 11, bodyTop + 62, c.col - 22, soft, 3200, 20));
+      out_.push(...legend(c.x(1) + 11, bodyTop + bodyH - 56, [
+        { hue: 'blue', text: 'filter on keyword / date / numeric' },
+        { hue: 'blue', text: 'selective filter \u2192 exact-search fallback' },
+      ], 3700, 15));
+    }
+
+    out_.push(...callout(pad, callY, W - pad * 2, CALL_H, 'Security filters are code, not prompt', [
+      ['Who decides', 'the identity provider, per request'],
+      ['What to test', 'the fallback when a filter is selective'],
+    ], 5600, 'amber'));
+    return out_;
+  },
+};
+
+export const bm25: Scene = {
+  id: 'bm25',
+  title: 'BM25: the lexical retriever',
+  sum: 'Exact identifiers, part numbers, acronyms and names. Dense retrieval misses them; an inverted index does not.',
+  dur: 9000,
+  phases: [
+    { label: 'Tokenise', cap: 'The same analyzer as the index: lowercased, lightly stemmed, identifiers kept whole.', at: 0 },
+    { label: 'Postings', cap: 'Each term points at the chunks that contain it. This is the whole index.', at: 1500 },
+    { label: 'Score', cap: 'Sum the per-term contributions, weight rare terms higher, and sort.', at: 3000 },
+    { label: 'What it wins', cap: 'err-4092 is not a paraphrase problem. It has to match exactly.', at: 4600 },
+  ],
+  els(st) {
+    const { W, H, pad, tall } = st;
+    const out: El[] = [];
+    const callY = H - pad - CALL_H;
+    const top = pad + 4;
+    const qH = 52;
+
+    out.push(card(pad, top, W - pad * 2, qH, 60, 'blue'));
+    out.push(label(pad + 11, top + 22, fit('ERR-4092 payments failover', W - pad * 2 - 66, 12), 200, 12, 'ink', { strong: true }));
+    ['err-4092', 'payments', 'failover'].forEach((t, i) => {
+      out.push(...chip(pad + 11 + i * 84, top + 30, 18, t, 320 + i * 90, i === 0 ? 'blue' : undefined, 10, true));
     });
-    const boxTop = rows.y(3) + rows.row + 16;
-    const boxH = H - pad - boxTop - (tall ? 30 : 0);
-    out.push(card(pad, boxTop, inner, Math.max(40, boxH), 1700));
-    const lines = wrap('Refunds are processed within 5 business days of approval [1][2]. An order id is required [1].', inner - 24, 11.5).slice(0, 3);
-    lines.forEach((l, i) => out.push(label(pad + 12, boxTop + 18 + i * 16, l, 1900 + i * 340, 11.5)));
-    if (tall) out.push(...chip(pad, H - pad - 24, 24, 'if passages disagree: say so', 3700, false, 10.5));
+
+    const bodyTop = top + qH + 14;
+    const bodyH = callY - 14 - bodyTop;
+    const postings: Array<[string, string]> = [
+      ['err-4092', 'c17 c88 c203'],
+      ['payments', 'c2 c9 c17 c88 \u2026 41k'],
+      ['failover', 'c17 c203 c355 c410'],
+    ];
+    const ranks = [
+      { id: 'Payments Runbook \u203a Failover', score: '8.9' },
+      { id: 'INC-4507 \u203a Timeline', score: '7.4' },
+      { id: 'Error catalogue \u203a ERR-4092', score: '6.8' },
+      { id: 'Ledger Runbook \u203a Failover', score: '5.1' },
+    ];
+
+    if (tall) {
+      const rows = stack(bodyTop, bodyH, 2, 10);
+      out.push(...panel(pad, rows.y(0), W - pad * 2, rows.row, 'Inverted index', 1200, 'amber', 'term \u2192 postings, chunk level'));
+      out.push(...keyRows(pad + 11, rows.y(0) + 56, W - pad * 2 - 22, postings, 1400, 17));
+      out.push(...panel(pad, rows.y(1), W - pad * 2, rows.row, 'Candidates \u00b7 score', 2800, undefined, '\u03a3 per-term contributions'));
+      const ri = inner(pad, rows.y(1), W - pad * 2, rows.row, true);
+      out.push(...rankList(ri.x, ri.y + 10, ri.w, ranks, 3000, 'amber', 18, 10.5));
+    } else {
+      const c = cols(pad, W - pad * 2, 2, 16);
+      out.push(...panel(c.x(0), bodyTop, c.col, bodyH, 'Inverted index', 1200, 'amber', 'term \u2192 postings, chunk level'));
+      out.push(...keyRows(c.x(0) + 11, bodyTop + 66, c.col - 22, postings, 1400, 20));
+      out.push(...legend(c.x(0) + 11, bodyTop + bodyH - 44, [
+        { hue: 'amber', text: 'weighted by rarity, not count' },
+      ], 2000, 15));
+      out.push(...panel(c.x(1), bodyTop, c.col, bodyH, 'Candidates \u00b7 score', 2800, undefined, '\u03a3 per-term contributions'));
+      const ri = inner(c.x(1), bodyTop, c.col, bodyH, true);
+      out.push(...rankList(ri.x, ri.y + 10, ri.w, ranks, 3000, 'amber', 22, 11));
+      out.push(...stat(ri.x, bodyTop + bodyH - 52, ri.w, 'Postings for payments', 41000, 'one term, one posting list', 4200, 20));
+    }
+
+    out.push(...callout(pad, callY, W - pad * 2, CALL_H, 'Where lexical search is the only answer', [
+      ['Wins', 'part numbers, acronyms, error codes, names'],
+      ['Loses', 'typos, synonyms, paraphrase'],
+    ], 5000, 'amber'));
     return out;
   },
 };
 
-export const SCENES_B: Scene[] = [enrichment, indexes, retrieval, answer];
+/** Steps 5-8, in order. */
+export const SCENES_B: Scene[] = [enrichment, indexes, filter, bm25];

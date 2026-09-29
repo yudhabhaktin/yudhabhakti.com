@@ -19,7 +19,10 @@ import './rag.css';
  * everything in between is the compositor's problem.
  */
 
-const FILL: Record<Fill, string> = {
+const HUES = ['blue', 'teal', 'amber', 'green', 'violet', 'red'] as const;
+
+/** Site tokens first, then the diagram's own categorical hues (see rag.css). */
+const FILL = {
   ink: 'var(--ink)',
   muted: 'var(--muted)',
   faint: 'var(--faint)',
@@ -30,14 +33,16 @@ const FILL: Record<Fill, string> = {
   'ink-soft': 'color-mix(in oklab, var(--ink) 7%, transparent)',
   panel: 'var(--surface)',
   paper: 'var(--paper)',
-};
+  ...Object.fromEntries(
+    HUES.flatMap((h) => [
+      [h, `var(--d-${h})`],
+      [`${h}-soft`, `var(--d-${h}-soft)`],
+      [`${h}-line`, `var(--d-${h}-line)`],
+    ])
+  ),
+} as Record<Fill, string>;
 
-const MARKERS = {
-  ink: 'rag-arrow-ink',
-  muted: 'rag-arrow-muted',
-  accent: 'rag-arrow-accent',
-  rule: 'rag-arrow-rule',
-} as const;
+const MARKERS = Object.fromEntries([['ink'], ['muted'], ['accent'], ['rule'], ...HUES.map((h) => [h])].flat().map((k) => [k, `rag-arrow-${k}`])) as Record<string, string>;
 
 /** Calm by design: a long tail keeps arrivals from looking like a twitch. */
 const EASE = 'cubic-bezier(0.33, 1, 0.68, 1)';
@@ -61,7 +66,10 @@ const ORIGIN: Partial<Record<Anim, string>> = {
 
 const fillOf = (token: Fill | undefined, fallback: Fill = 'ink') => FILL[token ?? fallback];
 
-const markerFor = (token: Fill | undefined) => `url(#${MARKERS[(token ?? 'rule') as keyof typeof MARKERS] ?? MARKERS.rule})`;
+const markerFor = (token: Fill | undefined) => {
+  const key = (token ?? 'rule').replace(/-(soft|line)$/, '');
+  return `url(#${MARKERS[key] ?? MARKERS.rule})`;
+};
 
 function Shape({ e }: { e: El }) {
   const kind = (e.anim ?? 'fade') as Anim;
@@ -462,7 +470,7 @@ export default function RagExplainer() {
         <div className="rag__stage">
           <svg ref={svgRef} viewBox={`0 0 ${stage.W} ${stage.H}`} role="img" aria-label={`${scene.title}. ${scene.sum}`}>
             <defs>
-              {(Object.keys(MARKERS) as Array<keyof typeof MARKERS>).map((token) => (
+              {(Object.keys(MARKERS) as string[]).map((token) => (
                 <marker
                   key={token}
                   id={MARKERS[token]}

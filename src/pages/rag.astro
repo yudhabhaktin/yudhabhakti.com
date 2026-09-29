@@ -9,7 +9,7 @@ import { SITE } from '../consts';
 // able to drift apart.
 
 const description =
-  'An interactive walkthrough of a retrieval-augmented generation pipeline: 100,000 documents in, parsing, chunking, embedding, three indexes, hybrid retrieval, reranking, and an answer that cites its sources.';
+  'An interactive walkthrough of a twelve-stage retrieval-augmented generation pipeline: 100,000 documents in, a manifest and dedupe, tiered parsing, chunking, enrichment and embedding, three indexes, metadata filtering, BM25 and dense search, hybrid retrieval and reranking, GraphRAG, and an answer that cites its sources.';
 ---
 
 <BaseLayout
@@ -21,7 +21,7 @@ const description =
   <section class="hero">
     <h1>RAG Pipeline Walkthrough</h1>
     <p class="muted">
-      Raw documents in, cited answers out — the eight stages in between, animated, with the
+      Raw documents in, cited answers out — the twelve stages in between, animated, with the
       reasoning behind each one.
     </p>
   </section>
@@ -48,7 +48,7 @@ const description =
   </section>
 
   <section>
-    <h2>The eight steps, in text</h2>
+    <h2>The twelve steps, in text</h2>
     <div class="prose">
       <p>
         If you would rather read than watch, this is the same pipeline in prose. It is also what

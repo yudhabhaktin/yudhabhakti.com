@@ -8,7 +8,12 @@
  * Colours are site tokens rather than hex, which is what makes the diagram follow
  * the site's light/dark theme without a second set of values.
  */
+export type Hue = 'blue' | 'teal' | 'amber' | 'green' | 'violet' | 'red';
+
 export type Fill =
+  | Hue
+  | `${Hue}-soft`
+  | `${Hue}-line`
   | 'ink'
   | 'muted'
   | 'faint'
@@ -21,6 +26,18 @@ export type Fill =
   | 'paper';
 
 export type Anim = 'fade' | 'pop' | 'rise' | 'draw' | 'growx' | 'growy' | 'none';
+
+/** Bounded random, so scenes look scattered but render identically every time. */
+export function rng(seed: number) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
+/** Clamp helper for layout maths. */
+export const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
 interface Timed {
   /** ms after the step starts */
