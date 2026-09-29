@@ -36,7 +36,7 @@ that.
 
 ## The music does not adapt
 
-This is the constraint that makes it genuinely hard. A walking robot can slow down when it
+This is the constraint that makes it hard. A walking robot can slow down when it
 feels unstable. A dancing robot cannot, because the music is a fixed timeline and the judges
 can hear it.
 

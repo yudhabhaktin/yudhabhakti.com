@@ -10,7 +10,7 @@ tags: ['career', 'iot', 'industrial', 'startups']
 
 2019 was a strange year to be graduating in Indonesia. The startup boom was at full volume —
 ride-hailing, e-commerce, fintech, travel. A handful of unicorns, a great deal of capital,
-and a genuine sense that the interesting work in this country had relocated to a few offices
+and a sense that the interesting work in this country had relocated to a few offices
 in South Jakarta.
 
 The default path was obvious to everyone. Consumer tech, Jakarta, a stack you could learn
@@ -48,7 +48,7 @@ The thing that decided it was a number I could not stop thinking about: manufact
 around a fifth of Indonesia's economy, and almost none of it had any instrumentation worth
 the name.
 
-Not "needs better dashboards." I mean a plant manager genuinely did not know how much of the
+Not "needs better dashboards." I mean a plant manager did not know how much of the
 day their machines had actually been running, because the way you found out was a supervisor
 with a clipboard writing down what they saw when they walked past.
 

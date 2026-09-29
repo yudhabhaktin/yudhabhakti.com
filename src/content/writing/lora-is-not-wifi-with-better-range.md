@@ -62,7 +62,7 @@ is not.
 seconds at a long spreading factor is one device consuming an unreasonable share of a shared
 channel, and it will still be flat inside a year.
 
-The discipline this forces is genuinely useful: you have to decide what the data is *for*
+The discipline this forces is useful: you have to decide what the data is *for*
 before you decide how often to send it. Most telemetry people ask for at ten-second
 resolution is looked at once a day. Send on change with a floor and a ceiling — report when
 the value moves more than a threshold, at minimum every hour so you can tell "unchanged"
@@ -139,7 +139,7 @@ The constraint is the useful part.
 
 When a link costs nothing, you send everything, and you never find out which of it mattered.
 When you are rationing bytes per hour, you are forced into a conversation with the person who
-wants the data about what they will genuinely do with it — and that conversation, not the
+wants the data about what they will do with it — and that conversation, not the
 radio, is where most of the value in these systems is.
 
 I have caught myself since, on projects with no bandwidth constraint at all, asking the LoRa

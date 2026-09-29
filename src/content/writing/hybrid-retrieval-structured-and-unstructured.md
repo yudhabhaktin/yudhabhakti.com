@@ -50,8 +50,7 @@ classification becomes a hard boundary, and compound questions like the one abov
 exactly on it.
 
 **Fusion.** Run both retrievers, merge what comes back, let the model compose the answer.
-Handles compound questions naturally. Costs more per query, and merging is genuinely
-fiddly: you are combining a result set that has row semantics with one that has passage
+Handles compound questions naturally. Costs more per query, and merging is fiddly: you are combining a result set that has row semantics with one that has passage
 semantics, and relevance scores from the two are not comparable numbers no matter how
 tempting it is to treat them that way.
 

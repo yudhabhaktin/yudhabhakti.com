@@ -51,7 +51,7 @@ on the bench at compile time, not much later somewhere you cannot reach.
 **Telemetry is not logging.** On a system you cannot attach a debugger to, the beacon is the
 only thing standing between you and total ignorance. What you choose to transmit is what you
 will be able to reason about later, and you have to make that call before you know what will
-go wrong. That is a genuinely hard design problem and I do not think I did it well.
+go wrong. That is a hard design problem and I do not think I did it well.
 
 ## The part that generalises
 

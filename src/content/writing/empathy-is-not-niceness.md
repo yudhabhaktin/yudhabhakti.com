@@ -29,8 +29,7 @@ I had an engineer whose work was consistently just below the standard the team n
 Reviews took longer than they should. I knew it, and I handled it by leaving thorough,
 gentle review comments and quietly doing more of the integration work myself. For months.
 That felt kind. It was not kind — it was me choosing my own comfort in the conversation over
-that person's ability to improve. They did not know where they stood, which is a genuinely
-bad place to put someone, and the first honest conversation we had should have happened a
+that person's ability to improve. They did not know where they stood, which is a bad place to put someone, and the first honest conversation we had should have happened a
 quarter earlier.
 
 The accurate model of their situation was: *this person wants to be good at this and is not

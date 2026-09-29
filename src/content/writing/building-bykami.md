@@ -44,7 +44,7 @@ The obvious counter is services — identity, loyalty, and booking as three depl
 I have decomposed monoliths professionally and I would do it again when the team is big
 enough that deployment coupling is the actual bottleneck. Here the team is me. Splitting
 this into services would buy independent deployability I do not need, and cost me
-distributed transactions across three domains that genuinely need to agree with each other:
+distributed transactions across three domains that need to agree with each other:
 a booking, the loyalty points it earns, and the identity both hang off.
 
 One process. One transaction boundary. When there is a second engineer and a reason, the

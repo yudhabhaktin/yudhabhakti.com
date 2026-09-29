@@ -13,7 +13,7 @@ me for the actual adjustment.
 
 The adjustment is this: for seven years I had a reliable daily signal that I had done
 something. Tests went green. A thing that did not work now worked. That feedback arrives on
-a timescale of hours and it is genuinely addictive.
+a timescale of hours and it is addictive.
 
 Then the job changed and the signal went away.
 

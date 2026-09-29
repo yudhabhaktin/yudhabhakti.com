@@ -49,7 +49,7 @@ There is no setting that avoids both errors. There is only a trade, and the trad
 made by the detector or by the engineer. It is a policy decision about which failure the
 institution is willing to own.
 
-That was genuinely disorienting for me as an undergraduate. I wanted the answer to be in the
+That was disorienting for me as an undergraduate. I wanted the answer to be in the
 physics. The physics gives you the shape of the curve. It does not tell you where to stand
 on it.
 

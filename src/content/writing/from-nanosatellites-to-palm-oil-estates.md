@@ -14,7 +14,7 @@ answers back.
 
 ## Things that answer back
 
-The first system I worked on that genuinely frightened me was UGMSat-1, a university
+The first system I worked on that frightened me was UGMSat-1, a university
 nanosatellite. I wrote flight software and worked on payload electronics. What I remember
 is not the code. It is the realisation that there is no patch window. Whatever you put in
 the flash is what runs, and if you got it wrong, you get to think about that for the

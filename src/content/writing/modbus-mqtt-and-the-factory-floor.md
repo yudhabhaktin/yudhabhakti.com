@@ -58,7 +58,7 @@ unworkable for a floor of them over a link you do not control.
 MQTT flips it. The gateway polls locally over Modbus, then publishes changes to a broker.
 The plant network stays chatty; the uplink carries a fraction of that.
 
-The genuinely useful part is not the pub/sub. It is that a broker-based design forces you to
+The useful part is not the pub/sub. It is that a broker-based design forces you to
 answer the offline question honestly. Factory connectivity is bad. Not "occasionally
 degraded" — actually bad, with outages measured in hours, often because someone unplugged
 something to run a vacuum cleaner.

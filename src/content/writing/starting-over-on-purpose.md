@@ -24,7 +24,7 @@ I was good at a specific thing — software against physical systems, at the edg
 time — and getting better at it every year. That is supposed to be the goal.
 
 What worried me was the shape of the groove. Everything I knew was organised around latency,
-determinism, and hardware I could reach. Genuinely useful, and a set of instincts that stop
+determinism, and hardware I could reach. Useful, and a set of instincts that stop
 transferring at some point. I could feel myself starting to answer new problems with the
 tools that had worked on the old ones.
 
@@ -66,8 +66,7 @@ for a network it will not find is stealing battery from someone whose shift is n
 
 **Data entry is the product.** Not the dashboard the data feeds. If entering a record takes
 noticeably longer than the paper form it replaced, adoption is over — and it will not be
-reported as "adoption failed," it will be reported as "the app is slow." I have watched a
-genuinely well-built screen lose to a clipboard because it had one extra confirmation step.
+reported as "adoption failed," it will be reported as "the app is slow." I have watched a well-built screen lose to a clipboard because it had one extra confirmation step.
 
 **Enterprise integration is where the honest complexity is.** Getting a clean record from a
 phone is not the hard part. Getting it into a system of record that has its own master data,

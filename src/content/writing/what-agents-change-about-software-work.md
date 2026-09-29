@@ -37,8 +37,7 @@ team actually needs at month end, because that information exists in a conversat
 not happened yet.
 
 **Understanding a system did not get cheaper in the way it looks like it did.** You can get
-an explanation of any component in seconds. You cannot get, in seconds, the thing that makes
-someone genuinely useful in a system — the accumulated sense of which parts are fragile, what
+an explanation of any component in seconds. You cannot get, in seconds, the thing that makes someone useful in a system — the accumulated sense of which parts are fragile, what
 broke last time, which invariant nobody wrote down. That comes from time and incidents.
 
 **Review did not get faster.** It got more important and more voluminous. This is the real

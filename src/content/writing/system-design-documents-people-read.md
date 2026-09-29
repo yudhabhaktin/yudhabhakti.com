@@ -56,8 +56,7 @@ behaviour. Not method signatures.
 
 **At least one alternative you took seriously.** If you cannot state a real alternative and
 say why you rejected it, you did not make a decision — you had an idea and stopped. This
-section is also where a reader who disagrees will go first, which makes it the most
-load-bearing part of the document.
+section is also where a reader who disagrees will go first, which is why it carries the most weight.
 
 **What happens when it breaks.** Which failures are expected, what the system does, what a
 human has to do. This is the section most often skipped and most often needed six months
